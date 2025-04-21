@@ -1,2 +1,49 @@
-# project
-PKU程序设计组队大作业
+# ChatMaker
+## PKU程序设计组队大作业
+
+## 项目结构
+```text
+CHATMAKER/
+│
+├── ui/                  # UI组件目录
+│   ├── area/            # 比较复杂的组件，通常组件间有信号沟通
+│   │   ├── chat.py      # 聊天区域组件
+│   │   ├── scroll.py    # 微信信息展示区组件
+│   │   ├── input.py     # 输入区组件
+│   │   └── function.py  # 功能区组件
+│   │   
+│   ├── widgets/            # 通用小组件，通常比较简单
+│   │   ├── avatar_selector.py      # 头像更改
+│   │   ├── message.py      # 单条文字消息
+│   │   ├── avatar.py       # 头像
+│   │   ├── bubble.py       # 气泡
+│   │   └── text_input.py   # 输入框
+│   │
+│   └── config.py           # 配置管理
+│
+├── styles/              # 样式目录，对应各个组件的样式
+│   ├── chat.qss         
+│   ├── scroll.qss       
+│   ├── input.qss     
+│   ├── avatar.qss     
+│   └── message.qss      
+│
+└── main.py              # 主程序入口
+```
+
+```
+handle_xxx() : 用来处理area内部模块通信
+
+```
+
+## 更新日志
+
+###  2025-04-21 (By cyz)
+#### 新增
+- 消息气泡上下移动
+- 现在点击头像也能选择消息方
+#### 修复
+- 修复消息功能乱跑的bug
+#### 变更
+- 重新规范了各个类的代码，各个组件分成了小的组件(widget)和较大的组件(area)，另外组件的格式设置**大部分**都位于`styles\`文件夹中。
+- ---

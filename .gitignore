@@ -1,1 +1,4 @@
-./fig
+__pycache__
+fig/
+assets/
+test.py

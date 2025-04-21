@@ -1,0 +1,21 @@
+QScrollArea {
+    border: none;
+}
+
+QScrollBar:vertical {
+    background: #f0f0f0;
+    width: 8px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background: #c0c0c0;
+    min-height: 20px;
+    border-radius: 4px;
+}
+
+/* 消息容器 */
+QWidget#message_container {
+    background: white;
+}
+

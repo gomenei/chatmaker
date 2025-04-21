@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, pyqtSignal
-from ui.chat_area import ChatArea
-from ui.function_area import FunctionPanel
+from ui.area.chat import ChatArea
+from ui.area.function import FunctionArea
 from ui.config import ConfigManager
 
 class MainWindow(QMainWindow):
@@ -22,7 +22,7 @@ class MainWindow(QMainWindow):
         self.chat_area = ChatArea()
         main_layout.addWidget(self.chat_area, stretch=2)
 
-        self.function_panel = FunctionPanel()
+        self.function_panel = FunctionArea()
         main_layout.addWidget(self.function_panel, stretch=1)
 
         # 连接插入功能
@@ -33,4 +33,4 @@ class MainWindow(QMainWindow):
     def handle_insert_message(self, text, is_me):
         """处理功能栏插入的消息"""
         avatar = self.config.get_avatar_path("me") if is_me else self.config.get_avatar_path("other")
-        self.chat_area.add_message(text, is_me, avatar)
+        self.chat_area.scroll_area.add_message(text, is_me, avatar)

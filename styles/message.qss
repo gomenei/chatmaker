@@ -1,0 +1,83 @@
+/* message_widget.qss */
+
+/* 全局样式 */
+QWidget {
+    font-family: "Microsoft YaHei";
+    font-size: 25px;
+}
+
+/* 按钮组样式 */
+MessageWidget > QFrame#btn_group {
+    background: rgba(255,255,255,0.9);
+    border-radius: 15px;
+    min-width: 300px;
+    max-width: 300px;
+    min-height: 40px;
+    max-height: 40px;  /* 这相当于固定尺寸 */
+}
+
+/* 消息气泡样式 - 自己发送的 */
+MessageWidget QTextEdit#bubble_me {
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px 8px 12px;
+    background-color: #9EEA6A;  /* 绿色背景 */
+    color: #000;
+}
+
+/* 消息气泡样式 - 对方发送的 */
+MessageWidget QTextEdit#bubble_other {
+    border: 1px solid #ddd;  /* 细边框 */
+    border-radius: 10px;
+    padding: 8px 12px 8px 12px;
+    background-color: #FFFFFF;  /* 白色背景 */
+    color: #000;
+}
+
+/* 单个按钮容器样式 */
+MessageWidget QWidget#btn_container {
+    /* 如果有需要可以添加样式 */
+    min-width: 100px;
+    max-width: 100px;
+    min-height: 40px;
+    max-height: 40px;  /* 这相当于固定尺寸 */
+}
+
+/* 图标按钮通用样式 */
+MessageWidget QPushButton#icon_btn {
+    border: none;
+    border-radius: 14px;  /* 50%圆形 */
+    color: white;
+    font-size: 16px;
+}
+
+/* 上移按钮样式 */
+MessageWidget QPushButton#btn_up {
+    background: #4CAF50;
+}
+MessageWidget QPushButton#btn_up:hover {
+    background: #4CAF50DD;  /* 悬加深色 */
+}
+
+/* 下移按钮样式 */
+MessageWidget QPushButton#btn_down {
+    background: #2196F3;
+}
+MessageWidget QPushButton#btn_down:hover {
+    background: #2196F3DD;
+}
+
+/* 删除按钮样式 */
+MessageWidget QPushButton#btn_delete {
+    background: #F44336;
+}
+MessageWidget QPushButton#btn_delete:hover {
+    background: #F44336DD;
+}
+
+/* 按钮文字样式 */
+MessageWidget QLabel#btn_text {
+    color: #666;
+    font: 12px "Microsoft YaHei";
+    margin-right: 5px;
+}

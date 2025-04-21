@@ -1,0 +1,36 @@
+/* 输入框主体样式 */
+QTextEdit {
+    background: #ffffff;      /* 微信同款浅灰背景 */
+    border-radius: 8px;      /* 更大的圆角 */
+    padding: 8px 12px;       /* 舒适的边距 */
+    color: #333;              /* 文本颜色 */
+}
+
+/* 发送按钮样式 */
+QPushButton {
+    /* 固定尺寸 */
+    min-width: 70px;
+    max-width: 70px;
+    min-height: 50px;
+    max-height: 50px;
+    
+    /* 字体设置 */
+    font-family: "Microsoft YaHei";
+    font-size: 10pt;
+    
+    /* 其他样式保留 */
+    background: #07c160;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-left: 8px;         /* 输入框与按钮间距 */
+}
+/* 悬停状态 */
+QPushButton:hover {
+    background: #05a050;
+}
+
+QPushButton:pressed { 
+    background: #048a45; 
+}
