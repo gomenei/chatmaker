@@ -19,3 +19,8 @@ QWidget#message_container {
     background: white;
 }
 
+/* 聊天背景 */
+QWidget{
+    background-color: #ededed;/* 微信默认聊天背景颜色 */
+}
+
