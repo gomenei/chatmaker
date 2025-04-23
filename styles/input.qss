@@ -1,6 +1,6 @@
 /* 输入框主体样式 */
 QTextEdit {
-    background: #ffffff;     /* 微信同款浅灰背景 */
+    background: #f7f7f7;     /* 微信同款浅灰背景 */
     border-radius: 8px;      /* 更大的圆角 */
     padding: 8px 12px;       /* 舒适的边距 */
     color: #333;              /* 文本颜色 */
