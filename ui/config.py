@@ -16,6 +16,7 @@ class ConfigManager(QObject):
                 "other": "./fig/default.jpeg"
             }
             ConfigManager._instance = self
+            self.button_size = 100
     
     @classmethod
     def instance(cls):

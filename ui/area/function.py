@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSignal, QPropertyAnimation
 from PyQt5.QtGui import QFont
 
 from PyQt5.QtWidgets import *
@@ -31,23 +31,12 @@ class FunctionArea(QWidget):
         self.avatar_selector = AvatarSelectorWidget()
 
         # ==== 插入对话按钮 ====
-        self.insert_btn = QPushButton("➕ 插入一条对话 😊")
-        self.insert_btn.setFixedHeight(100)
-        self.insert_btn.setFont(QFont("Microsoft YaHei", 11))
-        self.insert_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #f0f0f0;
-                border: 2px dashed #cccccc;
-                border-radius: 12px;
-                text-align: left;
-                padding: 10px;
-            }
-            QPushButton:hover {
-                background-color: #e0ffe0;
-                border-color: #07c160;
-            }
-        """)
-
+        size = self.config.button_size
+        self.message_btn = ExpandButton("插入对话", [["文字消息", "语音消息", "语音通话"], ["视频通话", "图片消息", "表情包"]], (size * 2, size * 3))
+        self.pocket_btn = ExpandButton("转账/红包", [["发送转账"], ["已被接收"], ["已收款"], ["发送红包"], ["已领取"]], (size, size * 5))
+        self.time_btn = ExpandButton("插入时间", [])
+        self.other_btn = ExpandButton("其他消息", [["很多功能"]], (size, size))
+    
         # 预留空间
         spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -55,18 +44,23 @@ class FunctionArea(QWidget):
         layout.addWidget(role_label)
         layout.addSpacing(10)  # 增加标题与头像间距
         layout.addWidget(self.avatar_selector)
-        layout.addWidget(self.insert_btn)
+        layout.addWidget(self.message_btn)
+        layout.addWidget(self.pocket_btn)
+        layout.addWidget(self.time_btn)
+        layout.addWidget(self.other_btn)
         layout.addItem(spacer)
 
     def setup_connections(self):
         # 连接插入
-        self.insert_btn.clicked.connect(self.insert_sample_message)
+        self.message_btn.button_clicked.connect(self.insert_sample_message)
+        self.pocket_btn.button_clicked.connect(self.insert_sample_message)
+        self.time_btn.button_clicked.connect(self.insert_sample_message)
+        self.other_btn.button_clicked.connect(self.insert_sample_message)
 
     def load_style(self):
         from styles import load_style
         self.setStyleSheet(load_style("styles/function.qss"))
 
-    def insert_sample_message(self):
-        text = "双击编辑对话 😊"
+    def insert_sample_message(self, text):
         is_me = self.avatar_selector.radio_me.isChecked()
         self.insert_clicked.emit(text, is_me)

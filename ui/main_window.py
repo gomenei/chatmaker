@@ -33,4 +33,8 @@ class MainWindow(QMainWindow):
     def handle_insert_message(self, text, is_me):
         """处理功能栏插入的消息"""
         avatar = self.config.get_avatar_path("me") if is_me else self.config.get_avatar_path("other")
-        self.chat_area.scroll_area.add_message(text, is_me, avatar)
+        match text:
+            case "文字消息":
+                self.chat_area.scroll_area.add_message("双击编辑文字", is_me, avatar)
+            case _:  # 默认情况（类似 default）
+                self.chat_area.scroll_area.add_message("功能暂未实现", is_me, avatar)
