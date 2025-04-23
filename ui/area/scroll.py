@@ -46,6 +46,7 @@ class ScrollArea(QScrollArea):
         message_widget.text_deleted.connect(self.remove_message)
         message_widget.text_up.connect(self.move_message_up)
         message_widget.text_down.connect(self.move_message_down)
+        self.scroll_to_bottom()  # 滚动到底部
 
     def remove_message(self, widget):
         if widget in self.message_widgets:

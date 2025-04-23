@@ -31,12 +31,12 @@ class FunctionArea(QWidget):
         self.avatar_selector = AvatarSelectorWidget()
 
         # ==== 插入对话按钮 ====
-        size = self.config.button_size
+        size = 120
         self.message_btn = ExpandButton("插入对话", [["文字消息", "语音消息", "语音通话"], ["视频通话", "图片消息", "表情包"]], (size * 2, size * 3))
         self.pocket_btn = ExpandButton("转账/红包", [["发送转账"], ["已被接收"], ["已收款"], ["发送红包"], ["已领取"]], (size, size * 5))
-        self.time_btn = ExpandButton("插入时间", [])
-        self.other_btn = ExpandButton("其他消息", [["很多功能"]], (size, size))
-    
+        self.time_btn = ExpandButton("插入时间", [["插入时间", "拍一拍"]], (size, 2 * size))
+        self.other_btn = ExpandButton("更多功能", [["其他消息"]], (size, size))
+        self.exit_btn = ExpandButton("退出", [[]], (0, 0))
         # 预留空间
         spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -48,6 +48,7 @@ class FunctionArea(QWidget):
         layout.addWidget(self.pocket_btn)
         layout.addWidget(self.time_btn)
         layout.addWidget(self.other_btn)
+        layout.addWidget(self.exit_btn)
         layout.addItem(spacer)
 
     def setup_connections(self):
@@ -56,6 +57,7 @@ class FunctionArea(QWidget):
         self.pocket_btn.button_clicked.connect(self.insert_sample_message)
         self.time_btn.button_clicked.connect(self.insert_sample_message)
         self.other_btn.button_clicked.connect(self.insert_sample_message)
+        self.exit_btn.clicked.connect(lambda: self.insert_sample_message("退出"))  # 退出按钮直接关闭窗口
 
     def load_style(self):
         from styles import load_style

@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout, QWidget, QSizePolicy, QLabel
 from PyQt5.QtGui import QFont, QCursor, QPixmap
 from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QTimer, QEvent, QRect
+from ui.widgets.insert_button import InsertButton
 
 class ExpandButton(QPushButton):
     button_clicked = pyqtSignal(str)
@@ -31,7 +32,7 @@ class ExpandButton(QPushButton):
     def setup_panel(self):
         self.panel = QWidget(flags=Qt.ToolTip)
         self.panel.setObjectName("expand_panel")
-        self.panel.setFixedSize(*self.panel_size)
+        self.panel.setMaximumSize(*self.panel_size)
 
         self.panel_layout = QVBoxLayout(self.panel)
         self.panel_layout.setSpacing(0)          # 按钮间垂直间距设为0
@@ -45,25 +46,9 @@ class ExpandButton(QPushButton):
         self.panel.installEventFilter(self)
 
     def add_button(self, text, icon_path, parent_layout):
-        widget = QWidget()
-        widget.setMaximumHeight(100)
-        widget.setMaximumWidth(100)
-        widget.setObjectName("custom_btn")  # 为整体设置标识符（用于样式表）
-        layout = QVBoxLayout(widget)
-        layout.setContentsMargins(0, 0, 0, 0)  # 移除布局边距
-        layout.setSpacing(0)                # 移除组件间距
-
-        icon = QLabel()
-        icon.setAlignment(Qt.AlignCenter)
-        icon.setPixmap(QPixmap(icon_path).scaled(64, 64, Qt.KeepAspectRatio))
-
-        label = QLabel(text)
-        label.setAlignment(Qt.AlignCenter)
-
-        layout.addWidget(icon)
-        layout.addWidget(label)
-        widget.mousePressEvent = lambda _: self.button_clicked.emit(text)
-        parent_layout.addWidget(widget)
+        button = InsertButton(text, icon_path)
+        button.clicked.connect(lambda: self.button_clicked.emit(text))
+        parent_layout.addWidget(button)
 
     def enterEvent(self, event):
         super().enterEvent(event)
@@ -88,7 +73,7 @@ class ExpandButton(QPushButton):
         panel_y = global_pos.y() + (button_rect.height() - self.panel.height()) 
         # 计算最下方位置
         panel_y = global_pos.y()
-        self.panel.move(global_pos.x() - self.panel.width(), panel_y)
+        self.panel.move(global_pos.x() + button_rect.width(), panel_y)
 
     def eventFilter(self, obj, event):
         if self.panel_size:

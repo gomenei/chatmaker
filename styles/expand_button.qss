@@ -30,22 +30,4 @@ QWidget#expand_panel {
     padding: 5px;
 }
 
-/**************** 面板内按钮样式 ****************/
-QWidget#expand_panel QWidget#custom_btn {
-    /* 基础样式 */
-    background: transparent;
-    border: none;
-    padding: 10px;
-    margin: 0;
-    border-radius: 8px;
-}
-/* 悬停时整体效果 */
-QWidget#custom_btn:hover {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                    stop:0 rgba(148, 227, 255, 0.3), 
-                    stop:1 rgba(168, 255, 120, 0.3));
-}
-/* 点击效果 */
-QWidget#custom_btn:hover:pressed {
-    background: rgba(200, 200, 255, 0.5);
-}
+

@@ -12,7 +12,9 @@ class MainWindow(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("ChatMaker")
-        self.resize(750, 1000)
+        self.setFixedSize(750, 1000)
+        # 移除标题栏
+        # self.setWindowFlag(Qt.FramelessWindowHint)
 
         main_widget = QWidget()
         main_layout = QHBoxLayout(main_widget)
@@ -34,6 +36,8 @@ class MainWindow(QMainWindow):
         """处理功能栏插入的消息"""
         avatar = self.config.get_avatar_path("me") if is_me else self.config.get_avatar_path("other")
         match text:
+            case "退出":
+                self.close()
             case "文字消息":
                 self.chat_area.scroll_area.add_message("双击编辑文字", is_me, avatar)
             case _:  # 默认情况（类似 default）

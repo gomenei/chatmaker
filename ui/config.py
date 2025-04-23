@@ -12,12 +12,14 @@ class ConfigManager(QObject):
         if not ConfigManager._instance:
             super().__init__()
             self._avatars = {
-                "me": "./fig/lyc.jpg",
-                "other": "./fig/default.jpeg"
+                "me": "./fig/avatar/user.jpeg",
+                "other": "./fig/avatar/default.jpeg"
             }
             ConfigManager._instance = self
-            self.button_size = 100
-    
+
+            self._icon_path = {
+                "文字消息": "./fig/icon/text_message.png",
+            }
     @classmethod
     def instance(cls):
         if cls._instance is None:
@@ -30,3 +32,6 @@ class ConfigManager(QObject):
     def set_avatar_path(self, role: str, path: str):
         self._avatars[role] = path
         self.avatar_changed.emit(role, path)
+    
+    def get_icon_path(self, text: str) -> str:
+        return self._icon_path.get(text, "./fig/icon/fix.png")
