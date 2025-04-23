@@ -12,7 +12,7 @@ class ConfigManager(QObject):
         if not ConfigManager._instance:
             super().__init__()
             self._avatars = {
-                "me": "./fig/lyc.jpg",
+                "me": "./fig/lyc.jpeg",
                 "other": "./fig/default.jpeg"
             }
             ConfigManager._instance = self
