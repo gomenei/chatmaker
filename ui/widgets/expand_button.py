@@ -1,74 +1,96 @@
-from PyQt5.QtWidgets import (QWidget, QPushButton, QLabel, 
-                            QHBoxLayout, QVBoxLayout, QApplication)
-from PyQt5.QtCore import QPropertyAnimation, Qt
-from PyQt5.QtGui import QFont, QPainter
+from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout, QWidget, QSizePolicy, QLabel
+from PyQt5.QtGui import QFont, QCursor, QPixmap
+from PyQt5.QtCore import pyqtSignal, QPoint, Qt, QTimer, QEvent, QRect
+from ui.widgets.insert_button import InsertButton
 
-class ExpandButton(QWidget):
-    def __init__(self):
-        super().__init__()
-        # 允许父控件透明（避免裁剪超出部分）
-        self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setWindowFlags(Qt.FramelessWindowHint)
-        # 主布局（水平排列：扩展区域 + 按钮）
-        self.layout = QHBoxLayout(self)
-        self.layout.setContentsMargins(0, 0, 0, 0)
-        self.layout.setSpacing(0)
-        # 扩展区域（左侧，初始宽度0）
-        self.expand_widget = QWidget()
-        self.expand_widget.setFixedWidth(0)
-        self.expand_widget.setStyleSheet("""
-            background-color: #ffffff;
-            border: 1px solid #07c160;
-            border-radius: 12px 0 0 12px;  /* 左侧圆角 */
-            border-right: none;
-            padding: 10px;
-        """)
-        # 扩展区域内部内容
-        expand_layout = QVBoxLayout(self.expand_widget)
-        expand_layout.addWidget(QLabel("💬 从左侧弹出"))
-        # 按钮（右侧）
-        self.button = QPushButton("➕ 插入一条对话 😊")
-        self.button.setFixedHeight(100)
-        self.button.setFont(QFont("Microsoft YaHei", 11))
-        self.button.setStyleSheet("""
-            QPushButton {
-                background-color: #f0f0f0;
-                border: 2px dashed #cccccc;
-                border-radius: 12px;
-                text-align: left;
-                padding: 10px;
-            }
-            QPushButton:hover {
-                background-color: #e0ffe0;
-                border-color: #07c160;
-            }
-        """)
-        # 将扩展区域和按钮添加到布局（注意顺序）
-        self.layout.addWidget(self.expand_widget)
-        self.layout.addWidget(self.button)
-        # 动画控制扩展区域宽度
-        self.animation = QPropertyAnimation(self.expand_widget, b"minimumWidth")
-        self.animation.setDuration(200)
-        # 绑定鼠标事件
-        self.button.installEventFilter(self)
+class ExpandButton(QPushButton):
+    button_clicked = pyqtSignal(str)
+
+    def __init__(self, text: str, button_texts: list = None, panel_size: tuple = None):
+        super().__init__(text)
+        self.button_texts = button_texts
+        self.panel_size = panel_size
+        self.init_ui()
+        self.load_style()
+    
+    def init_ui(self):
+        self.setObjectName("ExpandButton")
+        # 创建面板内容
+        if self.panel_size:
+
+            self.setup_panel()
+        
+            # 定时器优化
+            self.hide_timer = QTimer()
+            self.hide_timer.setSingleShot(True)
+            self.hide_timer.timeout.connect(self.panel.hide)
+    
+    def load_style(self):
+        from styles import load_style
+        self.setStyleSheet(load_style("styles/expand_button.qss"))
+        
+    def setup_panel(self):
+        self.panel = QWidget(flags=Qt.ToolTip)
+        self.panel.setObjectName("expand_panel")
+        self.panel.setMaximumSize(*self.panel_size)
+
+        self.panel_layout = QVBoxLayout(self.panel)
+        self.panel_layout.setSpacing(0)          # 按钮间垂直间距设为0
+        self.panel_layout.setContentsMargins(0, 0, 0, 0)  # 移除布局与面板边缘的边距
+        for button_line in self.button_texts:
+            layout = QHBoxLayout()
+            for button in button_line:
+                self.add_button(button, "./fig/fix.png", layout)
+            self.panel_layout.addLayout(layout)
+
+        self.panel.installEventFilter(self)
+
+    def add_button(self, text, icon_path, parent_layout):
+        button = InsertButton(text, icon_path)
+        button.clicked.connect(lambda: self.button_clicked.emit(text))
+        parent_layout.addWidget(button)
+
+    def enterEvent(self, event):
+        super().enterEvent(event)
+        if self.panel_size:
+            self.hide_timer.stop()
+            self.update_panel_position()
+            self.panel.show()
+
+    def leaveEvent(self, event):
+        super().leaveEvent(event)
+        if self.panel_size:
+            self.hide_timer.start(50)  # 统一延迟隐藏逻辑
+
+    def update_panel_position(self):
+        """动态更新面板位置以适应窗口移动"""
+        button_rect = self.rect()
+        global_pos = self.mapToGlobal(QPoint(0, 0))
+        
+        # 计算垂直居中位置
+        panel_y = global_pos.y() + (button_rect.height() - self.panel.height()) // 2
+        # 计算最上方位置
+        panel_y = global_pos.y() + (button_rect.height() - self.panel.height()) 
+        # 计算最下方位置
+        panel_y = global_pos.y()
+        self.panel.move(global_pos.x() + button_rect.width(), panel_y)
+
     def eventFilter(self, obj, event):
-        if obj == self.button:
-            if event.type() == event.Enter:
-                self._expand()
-            elif event.type() == event.Leave:
-                self._collapse()
+        if self.panel_size:
+            if obj == self.panel:
+                if event.type() == QEvent.Enter:
+                    self.setProperty("hover", "true")
+                    self.style().polish(self)
+                    self.hide_timer.stop()
+                elif event.type() == QEvent.Leave:
+                    # 检查是否进入主按钮区域
+                    self.setProperty("hover", "false")
+                    self.style().polish(self)
+                    cursor_pos = QCursor.pos()
+                    button_global_rect = QRect(
+                        self.mapToGlobal(QPoint(0, 0)),
+                        self.size()
+                    )
+                    if not button_global_rect.contains(cursor_pos):
+                        self.hide_timer.start(50)
         return super().eventFilter(obj, event)
-    def _expand(self):
-        """向左展开（宽度从0 -> 200）"""
-        self.animation.setStartValue(0)
-        self.animation.setEndValue(200)
-        self.animation.start()
-    def _collapse(self):
-        """收缩回左侧"""
-        self.animation.setStartValue(self.expand_widget.width())
-        self.animation.setEndValue(0)
-        self.animation.start()
-    def paintEvent(self, event):
-        """解决WA_TranslucentBackground下背景透明问题"""
-        painter = QPainter(self)
-        painter.fillRect(self.rect(), Qt.transparent)

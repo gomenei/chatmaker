@@ -59,7 +59,7 @@ class BubbleWidget(QTextEdit):
 
         # 更新控件尺寸
         self.setFixedWidth(int(content_width) + 12)
-        self.setFixedHeight(int(content_height) + 12)
+        self.setFixedHeight(int(content_height) + 18)
 
     def inputMethodEvent(self, event):
         super().inputMethodEvent(event)

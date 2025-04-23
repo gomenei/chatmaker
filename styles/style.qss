@@ -1,0 +1,22 @@
+/* 主标题栏 */
+#TitleWidget {
+    background-color: #ededed;
+}
+
+/* 返回按钮 */
+#BackButton {
+    font-size: 20px;
+    padding: 5px;
+}
+
+/* 标题文本 */
+#TitleLabel {
+    font-size: 16px;
+    color: #000000;
+}
+
+/* 菜单按钮 */
+#MenuButton {
+    font-size: 24px;
+    padding: 5px;
+}

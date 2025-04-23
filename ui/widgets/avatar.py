@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QLabel, QFileDialog
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QPainter, QPainterPath
 from ..config import ConfigManager
 
 class AvatarWidget(QLabel):
@@ -34,13 +34,32 @@ class AvatarWidget(QLabel):
         self.setStyleSheet(load_style("styles/avatar.qss"))
 
     def load_avatar(self, path: str):
-        """加载并显示头像"""
-        pixmap = QPixmap(path).scaled(
-            self.avatar_size, self.avatar_size, 
-            Qt.KeepAspectRatioByExpanding, 
+        """加载并显示带圆角的头像"""
+        original_pixmap = QPixmap(path)
+        if original_pixmap.isNull():
+            return
+
+        scaled_pixmap = original_pixmap.scaled(
+            self.avatar_size, self.avatar_size,
+            Qt.KeepAspectRatioByExpanding,
             Qt.SmoothTransformation
         )
-        self.setPixmap(pixmap)
+
+        rounded_pixmap = QPixmap(self.avatar_size, self.avatar_size)
+        rounded_pixmap.fill(Qt.transparent)
+
+        painter = QPainter(rounded_pixmap)
+        painter.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
+
+        path = QPainterPath()
+        radius = self.avatar_size / 10
+        path.addRoundedRect(0, 0, self.avatar_size, self.avatar_size, radius, radius)
+        painter.setClipPath(path)
+
+        painter.drawPixmap(0, 0, scaled_pixmap)
+        painter.end()
+
+        self.setPixmap(rounded_pixmap)
 
     def _on_avatar_changed(self, role: str, new_path: str):
         """响应头像变更信号"""

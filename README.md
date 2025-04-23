@@ -14,10 +14,14 @@ CHATMAKER/
 │   │   
 │   ├── widgets/            # 通用小组件，通常比较简单
 │   │   ├── avatar_selector.py      # 头像更改
-│   │   ├── message.py      # 单条文字消息
 │   │   ├── avatar.py       # 头像
 │   │   ├── bubble.py       # 气泡
-│   │   └── text_input.py   # 输入框
+│   │   ├── expand_button.py       # 带拓展框的按钮
+│   │   ├── insert_button.py       # 插入消息的功能按钮
+│   │   ├── message.py      # 单条文字消息
+│   │   ├── status.py       # 手机状态栏
+│   │   ├── text_input.py   # 输入框
+│   │   └── title.py   # 聊天顶栏
 │   │
 │   └── config.py           # 配置管理
 │
@@ -26,7 +30,8 @@ CHATMAKER/
 │   ├── scroll.qss       
 │   ├── input.qss     
 │   ├── avatar.qss     
-│   └── message.qss      
+│   ├── message.qss      
+│   └── ...    
 │
 └── main.py              # 主程序入口
 ```
@@ -38,6 +43,28 @@ handle_xxx() : 用来处理area内部模块通信
 
 ## 更新日志
 
+###  2025-04-23 (By cyz)
+#### 新增
+- 功能栏浮动窗口
+- 插入消息按钮
+- 手机状态栏和消息顶栏
+- 退出功能
+- ---
+
+###  2025-04-23 (By wz)
+#### 新增
+- 修改输入区域背景颜色
+- 头像增加圆角效果
+- 调整消息字体大小
+#### 修复
+- 修复上移下移按钮组左侧露出白色缝隙的bug
+- ---
+
+###  2025-04-22 (By wz)
+#### 新增
+- 修改聊天背景颜色(scroll)
+- ---
+
 ###  2025-04-21 (By cyz)
 #### 新增
 - 消息气泡上下移动
@@ -46,4 +73,3 @@ handle_xxx() : 用来处理area内部模块通信
 - 修复消息功能乱跑的bug
 #### 变更
 - 重新规范了各个类的代码，各个组件分成了小的组件(widget)和较大的组件(area)，另外组件的格式设置**大部分**都位于`styles\`文件夹中。
-- ---
