@@ -1,3 +1,4 @@
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, pyqtSignal
 from ui.area.chat import ChatArea
@@ -13,6 +14,11 @@ class MainWindow(QMainWindow):
     def init_ui(self):
         self.setWindowTitle("ChatMaker")
         self.setFixedSize(750, 1000)
+        self.setStyleSheet("""
+            QWidget {
+                background-color: #f7f7f7;
+            }
+        """)
         # 移除标题栏
         # self.setWindowFlag(Qt.FramelessWindowHint)
 

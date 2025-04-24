@@ -7,6 +7,7 @@ class TextInput(QTextEdit):
     """通用文本输入框组件（支持动态高度调整和Enter发送）"""
     send_trigger = pyqtSignal()
     height_changed = pyqtSignal(int)
+    text_input = pyqtSignal(bool)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -26,10 +27,14 @@ class TextInput(QTextEdit):
         self.max_input_height = 4 * line_height + 24  # 最大8行
         self.setMinimumHeight(self.min_input_height)
         self.setMaximumHeight(self.max_input_height)
-        self.adjust_height()
+
+        #设置初始宽度
+        self.setFixedWidth(350)
+
+        self.adjust_size()
 
     def setup_connections(self):
-        self.textChanged.connect(self.adjust_height)
+        self.textChanged.connect(self.adjust_size)
 
     def keyPressEvent(self, event):
         """Enter发送消息，Shift+Enter换行"""
@@ -39,10 +44,20 @@ class TextInput(QTextEdit):
         else:
             super().keyPressEvent(event)
 
-    def adjust_height(self):
+    def adjust_size(self):
+        """动态调整输入框形状"""
+        """动态调整输入框宽度"""
+        if self.toPlainText().strip():
+            self.setFixedWidth(300)
+            self.text_input.emit(True)
+        else:
+            self.setFixedWidth(350)
+            self.text_input.emit(False)
+
         """动态调整输入框高度"""
         doc = self.document()
         margin = self.contentsMargins()
         desired_height = doc.documentLayout().documentSize().height() + margin.top() + margin.bottom()
         desired_height = min(max(desired_height, self.min_input_height), self.max_input_height)
         self.setFixedHeight(int(desired_height))
+
