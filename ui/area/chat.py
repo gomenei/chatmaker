@@ -59,5 +59,4 @@ class ChatArea(QWidget):
             return
         
         self.scroll_area.add_message(text, True, self.config.get_avatar_path("me"))
-        # self.add_message("自动回复", False, "./fig/default.jpeg")
         self.input_widget.input_box.clear() # 清空输入框

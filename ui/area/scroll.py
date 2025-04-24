@@ -30,7 +30,6 @@ class ScrollArea(QScrollArea):
         """滚动到底部"""
         scroll_bar = self.verticalScrollBar()
         scroll_bar.setValue(scroll_bar.maximum())
-        QTimer.singleShot(50, self.scroll_to_bottom)
     
     def add_message(self, text, is_me, avatar_path):
         message_widget = MessageWidget(
@@ -47,6 +46,7 @@ class ScrollArea(QScrollArea):
         message_widget.text_up.connect(self.move_message_up)
         message_widget.text_down.connect(self.move_message_down)
         self.scroll_to_bottom()  # 滚动到底部
+        QTimer.singleShot(50, self.scroll_to_bottom)
 
     def remove_message(self, widget):
         if widget in self.message_widgets:

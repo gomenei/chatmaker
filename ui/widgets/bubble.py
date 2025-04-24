@@ -53,7 +53,7 @@ class BubbleWidget(QTextEdit):
         # 限制最大宽度
         doc.setTextWidth(self.max_width - 12)
 
-        content_width = min(text_width + 24, self.max_width)
+        content_width = min(text_width + 30, self.max_width)
         # 重新计算高度（基于设定的 textWidth）
         content_height = doc.size().height()
 
