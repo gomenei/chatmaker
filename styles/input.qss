@@ -12,8 +12,8 @@ QTextEdit {
     /* 固定尺寸 */
     min-width: 70px;
     max-width: 70px;
-    min-height: 30px;
-    max-height: 30px;
+    min-height: 35px;
+    max-height: 35px;
     
     /* 字体设置 */
     font-family: "Microsoft YaHei";
@@ -26,6 +26,7 @@ QTextEdit {
     border-radius: 6px;
     font-weight: 500;
     margin-left: 8px;         /* 输入框与按钮间距 */
+    margin-bottom: 15px;
 }
 /* 悬停状态 */
 #send_btn:hover {
@@ -42,10 +43,11 @@ QWidget{
 }
 
 QPushButton{
-    min_width: 30px;
-    max-width: 30px;
-    min_height: 30px;
-    max-height: 30px;
+    min_width: 35px;
+    max-width: 35px;
+    min_height: 35px;
+    max-height: 35px;
     border: none;
     background: transparent;
+    margin-bottom: 15px;
 }

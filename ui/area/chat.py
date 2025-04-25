@@ -30,7 +30,7 @@ class ChatArea(QWidget):
         # ===== 1. 手机状态栏 (全Emoji版本) =====
         self.status_bar = StatusWidget()
         # ===== 2. 微信风格标题栏 =====
-        self.title_bar = TitleWidget("💬 微信聊天")
+        self.title_bar = TitleWidget("请输入昵称")
         # self.title_bar.back_clicked.connect(self.handle_back)
         # ===== 3. 原有聊天区域 =====
         self.scroll_area = ScrollArea()

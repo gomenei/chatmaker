@@ -9,6 +9,7 @@ class TitleWidget(QWidget):
         self.title = title
         self.init_ui()
         self.setup_events()
+        self.load_style()
 
     def init_ui(self):
         self.setFixedHeight(44)
@@ -29,7 +30,7 @@ class TitleWidget(QWidget):
         layout.addWidget(self.title_label, stretch=1)  # 中间内容自动拉伸
 
         # 菜单按钮
-        self.menu_button = QLabel("⋯")
+        self.menu_button = QLabel("···")
         self.menu_button.setObjectName("MenuButton")
         layout.addWidget(self.menu_button, alignment=Qt.AlignRight)
 
@@ -40,3 +41,7 @@ class TitleWidget(QWidget):
     def set_title(self, text: str):
         """设置标题文本"""
         self.title_label.setText(text)
+
+    def load_style(self):
+        from styles import load_style
+        self.setStyleSheet(load_style("styles/title.qss"))
