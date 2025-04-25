@@ -18,26 +18,32 @@ class InputArea(QWidget):
         self.main_layout.setContentsMargins(0, 0, 0, 0)
 
         self.voice_btn = QPushButton(self)
-        self.voice_btn.setIcon(QIcon("./fig/icon/voice.jpg"))
-        self.voice_btn.setIconSize(QSize(30, 30))
+        self.voice_btn.setIconSize(QSize(35, 35))
+        self.voice_icon = QIcon("./fig/icon/voice.jpg")
+        self.voice_pressed_icon = QIcon("./fig/icon/voice_pressed.jpg")
+        self.voice_btn.setIcon(self.voice_icon)
 
         self.emoji_btn = QPushButton(self)
-        self.emoji_btn.setIcon(QIcon("./fig/icon/emoji.jpg"))
-        self.emoji_btn.setIconSize(QSize(30, 30))
+        self.emoji_btn.setIconSize(QSize(35, 35))
+        self.emoji_icon = QIcon("./fig/icon/emoji.jpg")
+        self.emoji_pressed_icon = QIcon("./fig/icon/emoji_pressed.jpg")
+        self.emoji_btn.setIcon(self.emoji_icon)
 
         self.others_btn = QPushButton(self)
-        self.others_btn.setIcon(QIcon("./fig/icon/others.jpg"))
-        self.others_btn.setIconSize(QSize(30, 30))
+        self.others_btn.setIconSize(QSize(35, 35))
+        self.others_icon = QIcon("./fig/icon/others.jpg")
+        self.others_pressed_icon = QIcon("./fig/icon/others_pressed.jpg")
+        self.others_btn.setIcon(self.others_icon)
 
         self.input_box = TextInput(self)
         self.send_btn = QPushButton("发送")
         self.send_btn.setObjectName("send_btn")
 
-        self.main_layout.addWidget(self.voice_btn, alignment=Qt.AlignCenter)
-        self.main_layout.addWidget(self.input_box, alignment=Qt.AlignCenter)
-        self.main_layout.addWidget(self.emoji_btn, alignment=Qt.AlignCenter)
-        self.main_layout.addWidget(self.others_btn, alignment=Qt.AlignCenter)
-        self.main_layout.addWidget(self.send_btn, alignment=Qt.AlignCenter)
+        self.main_layout.addWidget(self.voice_btn, alignment=Qt.AlignBottom)
+        self.main_layout.addWidget(self.input_box, alignment=Qt.AlignBottom)
+        self.main_layout.addWidget(self.emoji_btn, alignment=Qt.AlignBottom)
+        self.main_layout.addWidget(self.others_btn, alignment=Qt.AlignBottom)
+        self.main_layout.addWidget(self.send_btn, alignment=Qt.AlignBottom)
 
         self.send_btn.hide()
 
@@ -48,6 +54,12 @@ class InputArea(QWidget):
         self.input_box.send_trigger.connect(self.on_send_clicked)
 
         self.input_box.text_input.connect(self.non_null)
+        self.voice_btn.pressed.connect(self.voice_pressed)
+        self.voice_btn.released.connect(self.voice_released)
+        self.emoji_btn.pressed.connect(self.emoji_pressed)
+        self.emoji_btn.released.connect(self.emoji_released)
+        self.others_btn.pressed.connect(self.others_pressed)
+        self.others_btn.released.connect(self.others_released)
 
     def on_send_clicked(self):
         """触发发送信号"""
@@ -64,3 +76,21 @@ class InputArea(QWidget):
         else:
             self.send_btn.hide()
             self.others_btn.show()
+
+    def voice_pressed(self):
+        self.voice_btn.setIcon(self.voice_pressed_icon)
+
+    def voice_released(self):
+        self.voice_btn.setIcon(self.voice_icon)
+
+    def emoji_pressed(self):
+        self.emoji_btn.setIcon(self.emoji_pressed_icon)
+
+    def emoji_released(self):
+        self.emoji_btn.setIcon(self.emoji_icon)
+
+    def others_pressed(self):
+        self.others_btn.setIcon(self.others_pressed_icon)
+
+    def others_released(self):
+        self.others_btn.setIcon(self.others_icon)

@@ -23,8 +23,8 @@ class TextInput(QTextEdit):
         # 动态高度计算
         font_metrics = self.fontMetrics()
         line_height = font_metrics.lineSpacing()
-        self.min_input_height = line_height + 24  # 1行 + padding
-        self.max_input_height = 4 * line_height + 24  # 最大8行
+        self.min_input_height = line_height + 43  # 1行 + padding
+        self.max_input_height = 4 * line_height + 43  # 最大8行
         self.setMinimumHeight(self.min_input_height)
         self.setMaximumHeight(self.max_input_height)
 
@@ -48,7 +48,7 @@ class TextInput(QTextEdit):
         """动态调整输入框形状"""
         """动态调整输入框宽度"""
         if self.toPlainText().strip():
-            self.setFixedWidth(300)
+            self.setFixedWidth(308)
             self.text_input.emit(True)
         else:
             self.setFixedWidth(350)

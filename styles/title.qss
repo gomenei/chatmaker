@@ -11,12 +11,14 @@
 
 /* 标题文本 */
 #TitleLabel {
-    font-size: 16px;
+    font-size: 18px;
     color: #000000;
+    font-family: "HarmonyOS Sans SC";
 }
 
 /* 菜单按钮 */
 #MenuButton {
-    font-size: 24px;
+    font-size: 17px;
     padding: 5px;
+    letter-spacing: 0px;
 }
