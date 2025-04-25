@@ -24,8 +24,8 @@ class MainWindow(QMainWindow):
 
         main_widget = QWidget()
         main_layout = QHBoxLayout(main_widget)
-        main_layout.setContentsMargins(10, 10, 10, 10)
-        main_layout.setSpacing(15)
+        main_layout.setContentsMargins(0, 0, 0, 0)
+        main_layout.setSpacing(0)
 
         self.chat_area = ChatArea()
         main_layout.addWidget(self.chat_area, stretch=2)

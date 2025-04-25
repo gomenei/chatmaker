@@ -16,52 +16,46 @@ class TitleWidget(QWidget):
 
     def init_ui(self):
         self.setFixedHeight(50)  # 略高一点
-        self.setObjectName("TitleBar")
-        
-        # 设置浅色背景
-        self.setStyleSheet("""
-            QWidget#TitleBar {
-                background-color: #ededed;
-                border-bottom: 1px solid #dbdbdb;
-            }
-            QLabel#BackButton {
-                font-size: 20px;
-                padding: 0 10px;
-            }
-            QLineEdit#TitleLabel {
-                font-size: 17px;
-                font-weight: bold;
-                border: none;
-                background: transparent;
-            }
-            QLabel#MenuButton {
-                font-size: 20px;
-                padding: 0 10px;
-            }
-        """)
+        self.setObjectName("TitleWidget")
 
         layout = QHBoxLayout(self)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(5)
+        layout.setSpacing(0)
 
         # 返回按钮 - 使用微信样式的箭头
+
         self.back_button = QLabel()
         self.back_button.setObjectName("BackButton")
-        self.back_button.setText("←")  # 更简洁的箭头
-        self.back_button.setFixedWidth(40)  # 固定宽度
-        layout.addWidget(self.back_button, alignment=Qt.AlignVCenter)
+        self.back_button.setText("<")  # 更简洁的箭头
+        # self.back_button.setFixedWidth(40)  # 固定宽度
+        self.unread_bubble = LineEditWidget("99+")
+        self.unread_bubble.setObjectName("UnreadBubble")
+        self.unread_bubble.setAlignment(Qt.AlignRight)
+
+        back_container = QWidget()
+        back_layout = QHBoxLayout(back_container)
+        back_layout.setContentsMargins(0, 0, 0, 0)  # 消除默认边距
+        back_layout.setSpacing(2)  # 设置组件间距为2px
+        back_layout.addWidget(self.back_button)
+        back_layout.addWidget(self.unread_bubble)
+        layout.addWidget(back_container, alignment=Qt.AlignLeft)
 
         # 标题 (居中)
-        self.title_label = LineEditWidget(self.title)
+        self.title_container = QWidget()
+        title_layout = QHBoxLayout(self.title_container)
+        title_layout.setContentsMargins(0, 0, 0, 0)
+        self.title_label = LineEditWidget(self.title, self)
+        self.title_label.setText("微信聊天")
         self.title_label.setObjectName("TitleLabel")
         self.title_label.setAlignment(Qt.AlignCenter)
-        layout.addWidget(self.title_label, stretch=1)
+        title_layout.addWidget(self.title_label, alignment=Qt.AlignCenter)
+        layout.addWidget(self.title_container, stretch=1)
 
         # 菜单按钮
-        self.menu_button = QLabel("···")
+        self.menu_button = QLabel("⋯")
         self.menu_button.setObjectName("MenuButton")
         self.menu_button.setFixedWidth(40)  # 固定宽度
-        layout.addWidget(self.menu_button, alignment=Qt.AlignVCenter)
+        layout.addWidget(self.menu_button, alignment=Qt.AlignRight)
 
     def setup_events(self):
         self.back_button.mousePressEvent = lambda _: self.back_clicked.emit()

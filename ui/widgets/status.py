@@ -8,7 +8,7 @@ class StatusWidget(QWidget):
 
     def init_ui(self):
         self.setFixedHeight(24)
-        self.setStyleSheet("background-color: #000000; color: white;")
+        self.setStyleSheet("background-color: #ededed; color: black;")
         self.setAutoFillBackground(True)
         self.setAttribute(Qt.WA_StyledBackground, True)  # 确保背景覆盖
 
@@ -21,7 +21,7 @@ class StatusWidget(QWidget):
 
         # 中间 → 替换为 QLabel 使其可以填充背景
         status_middle = QLabel("")
-        status_middle.setStyleSheet("background-color: #000000;")
+        status_middle.setStyleSheet("background-color: #ededed;")
         self.status_layout.addWidget(status_middle, stretch=1)
 
         # 右侧

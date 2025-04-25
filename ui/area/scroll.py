@@ -69,5 +69,5 @@ class ScrollArea(QScrollArea):
             self.message_layout.insertWidget(index + 1, widget)
 
     def test_message(self):
-        self.add_message("这是一个非常长的文本，用于测试是否会根据容器宽度自动换行显示多行内容。", True, self.config.get_avatar_path("me"))
+        self.add_message("[微笑]这是一个非常长的文本，用于测试是否会根据容器宽度自动换行显示多行内容。", True, self.config.get_avatar_path("me"))
         self.add_message("ThisIsAVeryLongEnglishWordWithoutSpacesToTestWrappingBehavior", False, self.config.get_avatar_path("other"))

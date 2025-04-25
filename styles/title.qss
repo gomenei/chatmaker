@@ -1,24 +1,45 @@
-/* 主标题栏 */
-#TitleWidget {
-    background-color: #ededed;
+/* 主标题栏 - 模仿微信顶栏 */
+QWidget {
+    background-color: #ededed;  /* 微信使用的浅灰色背景 */
+    border-bottom: 1px solid #C7C7C7;  /* 底部分隔线 */
+    padding: 5px 0;  /* 上下内边距 */
 }
 
-/* 返回按钮 */
+/* 返回按钮 - 微信风格 */
 #BackButton {
-    font-size: 20px;
-    padding: 5px;
+    font-size: 24px;  /* 微信箭头更大 */
+    color: #000000;  /* 微信黑色色箭头 */
+    padding: 0px 2px;  /* 更大的点击区域 */
+    font-weight: bold;  /* 更粗的箭头 */
 }
 
-/* 标题文本 */
-#TitleLabel {
-    font-size: 18px;
+/**/
+#UnreadBubble {
+    background-color: #C7C7C7;  /* 微信灰 */
     color: #000000;
-    font-family: "HarmonyOS Sans SC";
+    border-radius: 9px;         /* 圆形效果 */
+    padding: 0px 5px;
+    font-size: 22px;            /* 与标题字体比例协调 */
+    margin-left: 2px;           /* 与箭头间距 */
+    font-family: "PingFang SC", sans-serif;
 }
 
-/* 菜单按钮 */
-#MenuButton {
-    font-size: 17px;
-    padding: 5px;
-    letter-spacing: 0px;
+/* 标题文本 - 微信风格 */
+QLineEdit#TitleLabel {
+    font-size: 17px;  /* 微信标准标题大小 */
+    color: #000000;  
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;  /* 微信使用的字体 */
+    font-weight: 500;  /* 中等粗细 */
+    border: none;
+    background: transparent;  /* 透明背景 */
 }
+
+/* 菜单按钮 - 微信风格 */
+#MenuButton {
+    font-size: 40px;  /* 三点更大 */
+    color: #000000;  /* 微信灰色 */
+    padding: 8px 12px;
+    min-width: 40px;
+    line-height: 1;  /* 防止垂直偏移 */
+}
+
