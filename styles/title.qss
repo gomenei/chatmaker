@@ -38,8 +38,15 @@ QLineEdit#TitleLabel {
 #MenuButton {
     font-size: 40px;  /* 三点更大 */
     color: #000000;  /* 微信灰色 */
-    padding: 8px 12px;
+    padding: 0;
+    margin: 0;
     min-width: 40px;
-    line-height: 1;  /* 防止垂直偏移 */
+    max-height: 50px;
+    background: #ededed;
+    border: none;
+    border-bottom: 1px solid #C7C7C7;  /* 底部分隔线 */
 }
 
+#MenuButton:pressed {
+    color: #808080;  /* 按下时文字颜色变为灰色 */
+}

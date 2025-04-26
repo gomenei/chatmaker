@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QLineEdit
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QLabel, QLineEdit, QPushButton
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
 
@@ -52,7 +52,7 @@ class TitleWidget(QWidget):
         layout.addWidget(self.title_container, stretch=1)
 
         # 菜单按钮
-        self.menu_button = QLabel("⋯")
+        self.menu_button = QPushButton("⋯")
         self.menu_button.setObjectName("MenuButton")
         self.menu_button.setFixedWidth(40)  # 固定宽度
         layout.addWidget(self.menu_button, alignment=Qt.AlignRight)
