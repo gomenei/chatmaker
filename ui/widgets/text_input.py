@@ -2,6 +2,7 @@
 from PyQt5.QtWidgets import QTextEdit
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont, QFontMetrics
+from ui.config import ConfigManager
 
 class TextInput(QTextEdit):
     """通用文本输入框组件（支持动态高度调整和Enter发送）"""
@@ -11,6 +12,8 @@ class TextInput(QTextEdit):
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.config = ConfigManager().instance()
+        self.emoji_map = self.config.emoji_map
         self.init_ui()
         self.setup_connections()
 
@@ -60,3 +63,16 @@ class TextInput(QTextEdit):
         desired_height = doc.documentLayout().documentSize().height() + margin.top() + margin.bottom()
         desired_height = min(max(desired_height, self.min_input_height), self.max_input_height)
         self.setFixedHeight(int(desired_height))
+    
+    def get_emoji_html(self, emoji_code):
+        """返回表情图片的HTML格式"""
+        if emoji_code in self.emoji_map:
+            return f'<img src="{self.emoji_map[emoji_code]}" width="24" height="24">'
+        return ""
+
+    def insert_emoji(self, emoji_code):
+        """用HTML插入表情图片（替代QTextImageFormat方式）"""
+        cursor = self.textCursor()
+        html = self.get_emoji_html(emoji_code)
+        if html:  # 只插入有效的表情
+            cursor.insertHtml(html)

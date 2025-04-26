@@ -8,6 +8,7 @@ CHATMAKER/
 ├── ui/                  # UI组件目录
 │   ├── area/            # 比较复杂的组件，通常组件间有信号沟通
 │   │   ├── chat.py      # 聊天区域组件
+│   │   ├── emoji.py     # 表情区组件
 │   │   ├── scroll.py    # 微信信息展示区组件
 │   │   ├── input.py     # 输入区组件
 │   │   └── function.py  # 功能区组件
@@ -18,6 +19,7 @@ CHATMAKER/
 │   │   ├── bubble.py       # 气泡
 │   │   ├── expand_button.py       # 带拓展框的按钮
 │   │   ├── insert_button.py       # 插入消息的功能按钮
+│   │   ├── line_edit.py       # 单行气泡
 │   │   ├── message.py      # 单条文字消息
 │   │   ├── status.py       # 手机状态栏
 │   │   ├── text_input.py   # 输入框
@@ -42,6 +44,17 @@ handle_xxx() : 用来处理area内部模块通信
 ```
 
 ## 更新日志
+
+###  2025-04-27 (By cyz)
+#### 新增
+- 表情栏
+- 支持微信表情插入
+- ---
+
+###  2025-04-26 (By wz)
+#### 新增
+- 聊天顶栏菜单可点击
+- ---
 
 ###  2025-04-25 (By cyz)
 #### 新增
