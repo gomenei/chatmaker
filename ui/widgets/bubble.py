@@ -1,14 +1,14 @@
 from PyQt5.QtWidgets import QSizePolicy, QTextBrowser, QTextEdit
 from PyQt5.QtGui import QTextDocument, QFontMetrics, QTextImageFormat, QTextCursor
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal
+from ui.config import ConfigManager
 
 class BubbleWidget(QTextEdit):
     def __init__(self, text: str, parent=None):
         super().__init__(parent=parent)
         self.text = text
-        self.emoji_map = {
-            "[微笑]": "./fig/icon/1 (1).gif",
-        }
+        self.config = ConfigManager().instance()
+        self.emoji_map = self.config.emoji_map
         self.initUI()
         self.setup_connections()
 
@@ -74,19 +74,15 @@ class BubbleWidget(QTextEdit):
         super().showEvent(event)
         QTimer.singleShot(0, self.update_size)
 
-    def _process_emoji(self, emoji_code):
-        """将文本中的[表情]替换为图片"""
-        cursor = self.textCursor()
-        cursor.movePosition(QTextCursor.Start)
-        self.setText("")  # 清空后重新插入带表情的内容
+    def get_emoji_html(self, emoji_code):
+        """返回表情图片的HTML格式"""
         if emoji_code in self.emoji_map:
-            self._insert_emoji(emoji_code)
+            return f'<img src="{self.emoji_map[emoji_code]}" width="24" height="24">'
+        return ""
 
-    def _insert_emoji(self, emoji_code):
-        """插入单个表情图片"""
+    def insert_emoji(self, emoji_code):
+        """用HTML插入表情图片（替代QTextImageFormat方式）"""
         cursor = self.textCursor()
-        format = QTextImageFormat()
-        format.setName(self.emoji_map[emoji_code])  # 图片路径
-        format.setWidth(24)  # 表情宽度
-        format.setHeight(24) # 表情高度
-        cursor.insertImage(format)
+        html = self.get_emoji_html(emoji_code)
+        if html:  # 只插入有效的表情
+            cursor.insertHtml(html)

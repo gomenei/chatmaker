@@ -117,9 +117,10 @@ class ChatArea(QWidget):
         if last_focused is not None:
             if isinstance(last_focused, (QLineEdit, QTextEdit, QPlainTextEdit)):
                 # 如果有选中的文本，先删除再插入
-                cursor = last_focused.textCursor()
-                cursor.insertText(emoji_code)
-                last_focused.setTextCursor(cursor)  # 确保光标位置正确
+                last_focused.insert_emoji(emoji_code)
+                # cursor = last_focused.textCursor()
+                # cursor.insertText(emoji_code)
+                # last_focused.setTextCursor(cursor)  # 确保光标位置正确
             else:
                 print(f"当前焦点控件 {last_focused} 不支持插入文本")
         else:

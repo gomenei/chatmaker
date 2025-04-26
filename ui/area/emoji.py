@@ -1,13 +1,16 @@
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QPushButton, 
-                            QFrame, QGridLayout, QScrollArea, QSizePolicy, QApplication)
+                            QFrame, QGridLayout, QScrollArea, QSizePolicy, QApplication,)
 from PyQt5.QtCore import Qt, pyqtSignal, QSize, QPropertyAnimation, QEasingCurve
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QPixmap
+from ui.config import ConfigManager
 
 class EmojiArea(QFrame):
     emoji_selected = pyqtSignal(str)
 
     def __init__(self, parent=None):
         super().__init__(parent)
+        self.config = ConfigManager().instance()
+        self.emoji_map = self.config.emoji_map
         self.init_ui()
 
     def init_ui(self):
@@ -33,30 +36,44 @@ class EmojiArea(QFrame):
         main_layout.addWidget(scroll)
         main_layout.setContentsMargins(0, 0, 0, 0)
 
-        # 测试emoji表情
-        self.emojis = [
-            "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆", "😉", "😊",
-            "😋", "😎", "😍", "😘", "😗", "😙", "😚", "🙂", "🤗", "🤔",
-            "😐", "😑", "😶", "🙄", "😏", "😣", "😥", "😮", "🤐", "😯"
-        ]
+        # # 测试emoji表情
+        # self.emojis = [
+        #     "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆", "😉", "😊",
+        #     "😋", "😎", "😍", "😘", "😗", "😙", "😚", "🙂", "🤗", "🤔",
+        #     "😐", "😑", "😶", "🙄", "😏", "😣", "😥", "😮", "🤐", "😯"
+        # ]
         
         self.add_emojis()
 
     def add_emojis(self):
-        for i, emoji in enumerate(self.emojis):
-            btn = QPushButton(emoji)
-            btn.setStyleSheet("""
-                QPushButton {
-                    font-size: 24px;
-                    background: transparent;
-                    border: none;
-                    padding: 5px;
-                }
-                QPushButton:hover {
-                    background: #e0e0e0;
-                    border-radius: 5px;
-                }
-            """)
+        row, col = 0, 0
+        for emoji_code, img_path in self.emoji_map.items():
+            btn = QPushButton()
             btn.setFixedSize(40, 40)
-            btn.clicked.connect(lambda _, e=emoji: self.emoji_selected.emit(e))
-            self.layout.addWidget(btn, i//5, i%5)
+            btn.setToolTip(emoji_code)  # 悬停显示表情代号
+            
+            # 加载图片并缩放
+            pixmap = QPixmap(img_path)
+            if pixmap.isNull():
+                print(f"警告：表情图片未找到 {img_path}")
+                continue
+                
+            icon = QIcon(pixmap.scaled(
+                30, 30, 
+                Qt.KeepAspectRatio, 
+                Qt.SmoothTransformation
+            ))
+            btn.setIcon(icon)
+            btn.setIconSize(QSize(30, 30))
+            
+            # 点击时发送表情代号
+            btn.clicked.connect(
+                lambda _, code=emoji_code: self.emoji_selected.emit(code)
+            )
+            
+            self.layout.addWidget(btn, row, col)
+            col += 1
+            if col >= 5:  # 每行 5 个表情
+                col = 0
+                row += 1
+

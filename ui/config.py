@@ -20,6 +20,10 @@ class ConfigManager(QObject):
             self._icon_path = {
                 "文字消息": "./fig/icon/text_message.png",
             }
+            self.emoji_map = {
+                f"{i}": f"./fig/emojis/{i}.gif" for i in range(1, 109)
+            }
+
     @classmethod
     def instance(cls):
         if cls._instance is None:
