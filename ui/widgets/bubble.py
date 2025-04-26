@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QSizePolicy, QTextBrowser, QTextEdit
 from PyQt5.QtGui import QTextDocument, QFontMetrics, QTextImageFormat, QTextCursor
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal
 
 class BubbleWidget(QTextEdit):
     def __init__(self, text: str, parent=None):
@@ -28,7 +28,7 @@ class BubbleWidget(QTextEdit):
         # 设置初始文字
         self.setText(self.text)
         self.setReadOnly(True)
-    
+        
     def setup_connections(self):
         self.mouseDoubleClickEvent = self.enter_edit_mode
         self.focusOutEvent = self.exit_edit_mode

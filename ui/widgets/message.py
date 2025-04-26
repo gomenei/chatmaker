@@ -12,8 +12,8 @@ class MessageWidget(QWidget):
     text_up = pyqtSignal(QWidget)
     text_down = pyqtSignal(QWidget)
 
-    def __init__(self, text: str, is_me: bool, role: str, avatar_path: str):
-        super().__init__()
+    def __init__(self, text: str, is_me: bool, role: str, avatar_path: str, parent):
+        super().__init__(parent)
         self.is_me = is_me        # 消息方向标识
         self.role = role          # 群成员标识
         self.avatar_path = avatar_path
@@ -104,12 +104,11 @@ class MessageWidget(QWidget):
 
     def setup_bubble(self, text: str):
         """使用 QTextEdit 实现消息气泡"""      
-        self.bubble = BubbleWidget(text) 
+        self.bubble = BubbleWidget(text, self) 
         self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
 
     def enterEvent(self, event):
         """ 鼠标进入显示控制按钮 """
-        # self.btn_group.move(self.width()-110, 10)
         self.btn_group.show()
         super().enterEvent(event)
     

@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QFrame
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, pyqtSignal
 from ui.config import ConfigManager
 from ui.widgets.message import MessageWidget
 
@@ -10,7 +10,7 @@ class ScrollArea(QScrollArea):
         self.message_widgets = [] # 消息队列
         self.init_ui()
         self.load_style()
-        self.test_message()
+        # self.test_message() 暂时注释掉测试消息，否则报错
 
     def init_ui(self):
         self.setWidgetResizable(True)
@@ -36,8 +36,10 @@ class ScrollArea(QScrollArea):
             text=text,
             is_me=is_me,  
             role="me" if is_me else "other",
-            avatar_path=avatar_path 
+            avatar_path=avatar_path,
+            parent=self
         )
+        message_widget.bubble.installEventFilter(self.parent())
 
         # 将消息添加到容器
         self.message_layout.addWidget(message_widget)

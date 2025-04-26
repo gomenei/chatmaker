@@ -60,4 +60,3 @@ class TextInput(QTextEdit):
         desired_height = doc.documentLayout().documentSize().height() + margin.top() + margin.bottom()
         desired_height = min(max(desired_height, self.min_input_height), self.max_input_height)
         self.setFixedHeight(int(desired_height))
-

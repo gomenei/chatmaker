@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTextEdit
 from PyQt5.QtCore import Qt, pyqtSignal, QSize
 from PyQt5.QtGui import QIcon
 from ui.widgets.text_input import TextInput  # 单独的文本输入组件
@@ -6,6 +6,7 @@ from ui.widgets.text_input import TextInput  # 单独的文本输入组件
 class InputArea(QWidget):
     send_clicked = pyqtSignal()
     voice_clicked = pyqtSignal() #输入区域转换为语音输入
+    emoji_clicked = pyqtSignal() #表情框弹出
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -52,6 +53,8 @@ class InputArea(QWidget):
         self.send_btn.clicked.connect(self.on_send_clicked)
         # Enter键快速发送
         self.input_box.send_trigger.connect(self.on_send_clicked)
+        # 发送编辑事件
+        self.emoji_btn.clicked.connect(lambda: self.emoji_clicked.emit())
 
         self.input_box.text_input.connect(self.non_null)
         self.voice_btn.pressed.connect(self.voice_pressed)
