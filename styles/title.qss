@@ -17,7 +17,10 @@ QWidget {
 #UnreadBubble {
     background-color: #C7C7C7;  /* 微信灰 */
     color: #000000;
-    border-radius: 9px;         /* 圆形效果 */
+    min-hight: 24px;
+    max-height: 24px;
+    min-weight: 24px;
+    border-radius: 12px;         /* 圆形效果 */
     padding: 0px 5px;
     font-size: 22px;            /* 与标题字体比例协调 */
     margin-left: 2px;           /* 与箭头间距 */

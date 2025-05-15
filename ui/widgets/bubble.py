@@ -23,6 +23,9 @@ class BubbleWidget(QTextEdit):
         # 按控件宽度自动换行
         self.setLineWrapMode(QTextBrowser.WidgetWidth)
 
+        self.setContentsMargins(0, 0, 0, 0)
+        self.document().setDocumentMargin(0)
+
         self.setMaximumWidth(300)
         self.max_width = 300  # 最大宽度
         # 设置初始文字

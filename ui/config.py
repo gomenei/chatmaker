@@ -23,6 +23,14 @@ class ConfigManager(QObject):
             self.emoji_map = {
                 f"{i}": f"./fig/emojis/{i}.gif" for i in range(1, 109)
             }
+            self.input_icon_path = {
+                "voice": "./fig/icon/voice.jpg",
+                "voice_pressed": "./fig/icon/voice_pressed.jpg",
+                "emoji": "./fig/icon/emoji.jpg",
+                "emoji_pressed": "./fig/icon/emoji_pressed.jpg",
+                "others": "./fig/icon/others.jpg",
+                "others_pressed": "./fig/icon/others_pressed.jpg",
+            }
 
     @classmethod
     def instance(cls):
@@ -39,3 +47,6 @@ class ConfigManager(QObject):
     
     def get_icon_path(self, text: str) -> str:
         return self._icon_path.get(text, "./fig/icon/fix.png")
+
+    def get_input_icon(self, icon_type: str) -> str:
+        return self.input_icon_path.get(icon_type, "")
