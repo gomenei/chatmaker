@@ -53,6 +53,7 @@ class BubbleWidget(QTextEdit):
         text = doc.toPlainText()
         font_metrics = QFontMetrics(self.font())
         text_width = font_metrics.width(text) + font_metrics.width(preedit_text)
+        
         # 限制最大宽度
         doc.setTextWidth(self.max_width - 12)
 
