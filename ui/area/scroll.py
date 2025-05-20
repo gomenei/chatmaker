@@ -31,13 +31,14 @@ class ScrollArea(QScrollArea):
         scroll_bar = self.verticalScrollBar()
         scroll_bar.setValue(scroll_bar.maximum())
     
-    def add_message(self, text, is_me, avatar_path):
+    def add_message(self, text, is_me, avatar_path, message_type="text"):
         message_widget = MessageWidget(
             text=text,
             is_me=is_me,  
             role="me" if is_me else "other",
             avatar_path=avatar_path,
-            parent=self
+            parent=self,
+            message_type=message_type
         )
         message_widget.bubble.installEventFilter(self.parent())
 

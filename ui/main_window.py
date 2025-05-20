@@ -46,5 +46,11 @@ class MainWindow(QMainWindow):
                 self.close()
             case "文字消息":
                 self.chat_area.scroll_area.add_message("双击编辑文字", is_me, avatar)
+            case "语音消息":
+                self.chat_area.scroll_area.add_message("1", is_me, avatar, message_type="voice")
+            case "语音通话":
+                self.chat_area.scroll_area.add_message("2", is_me, avatar, message_type="voicecall")
+            case "视频通话":
+                self.chat_area.scroll_area.add_message("3", is_me, avatar, message_type="videocall")
             case _:  # 默认情况（类似 default）
                 self.chat_area.scroll_area.add_message("功能暂未实现", is_me, avatar)
