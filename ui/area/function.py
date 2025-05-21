@@ -11,6 +11,7 @@ from ui.widgets.avatar_selector import AvatarSelectorWidget
 
 class FunctionArea(QWidget):
     insert_clicked = pyqtSignal(str, bool)  # text, is_me
+    export_clicked = pyqtSignal()
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -37,6 +38,7 @@ class FunctionArea(QWidget):
         self.time_btn = ExpandButton("插入时间", [["插入时间", "拍一拍"]], (size, 2 * size))
         self.other_btn = ExpandButton("更多功能", [["其他消息"]], (size, size))
         self.exit_btn = ExpandButton("退出", [[]], (0, 0))
+        self.export_btn = ExpandButton("导出聊天记录", [[]], (240, 60))
         # 预留空间
         spacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
@@ -48,6 +50,7 @@ class FunctionArea(QWidget):
         layout.addWidget(self.pocket_btn)
         layout.addWidget(self.time_btn)
         layout.addWidget(self.other_btn)
+        layout.addWidget(self.export_btn)
         layout.addWidget(self.exit_btn)
         layout.addItem(spacer)
 
@@ -57,6 +60,7 @@ class FunctionArea(QWidget):
         self.pocket_btn.button_clicked.connect(self.insert_sample_message)
         self.time_btn.button_clicked.connect(self.insert_sample_message)
         self.other_btn.button_clicked.connect(self.insert_sample_message)
+        self.export_btn.clicked.connect(self.export_clicked.emit)
         self.exit_btn.clicked.connect(lambda: self.insert_sample_message("退出"))  # 退出按钮直接关闭窗口
 
     def load_style(self):
