@@ -1,9 +1,10 @@
-from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame, 
-                            QPushButton, QLabel)
+from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame,
+                             QPushButton, QLabel)
 from PyQt5.QtCore import Qt, pyqtSignal
 from ..config import ConfigManager
 from ui.widgets.avatar import AvatarWidget
 from ui.widgets.bubble import BubbleWidget
+
 
 class MessageWidget(QWidget):
     """带头像的消息气泡组件，支持双向显示和内容编辑"""
@@ -14,13 +15,13 @@ class MessageWidget(QWidget):
 
     def __init__(self, text: str, is_me: bool, role: str, avatar_path: str, parent):
         super().__init__(parent)
-        self.is_me = is_me        # 消息方向标识
-        self.role = role          # 群成员标识
+        self.is_me = is_me  # 消息方向标识
+        self.role = role  # 群成员标识
         self.avatar_path = avatar_path
-        self.text = text 
+        self.text = text
         self.init_ui()
         self.load_style()
-        
+
     def init_ui(self):
         """初始化界面布局"""
         self.setup_avatar()
@@ -33,14 +34,15 @@ class MessageWidget(QWidget):
 
         """气泡 + 头像设置"""
         self.chatbubble_layout = QHBoxLayout()
-        
+        self.chatbubble_layout.setContentsMargins(0, 0, 0, 0)
+
         if self.is_me:
             self.chatbubble_layout.addStretch()
-            self.chatbubble_layout.addWidget(self.bubble)
+            self.chatbubble_layout.addWidget(self.bubble_container)
             self.chatbubble_layout.addWidget(self.avatar_label, alignment=Qt.AlignTop)
         else:
             self.chatbubble_layout.addWidget(self.avatar_label, alignment=Qt.AlignTop)
-            self.chatbubble_layout.addWidget(self.bubble)
+            self.chatbubble_layout.addWidget(self.bubble_container)
             self.chatbubble_layout.addStretch()
 
         self.main_layout.addLayout(self.chatbubble_layout)
@@ -53,7 +55,7 @@ class MessageWidget(QWidget):
 
     def setup_avatar(self):
         self.avatar_label = AvatarWidget(
-            role="me" if self.is_me else "other", 
+            role="me" if self.is_me else "other",
             initial_path=self.avatar_path,
             avatar_size=40
         )
@@ -71,7 +73,7 @@ class MessageWidget(QWidget):
         self.btn_up = self.setup_signal_button("↑", "上移", "btn_up", layout)
         self.btn_down = self.setup_signal_button("↓", "下移", "btn_down", layout)
         self.btn_delete = self.setup_signal_button("×", "删除", "btn_delete", layout)
-        
+
         self.btn_delete.clicked.connect(lambda: self.text_deleted.emit(self))
         self.btn_down.clicked.connect(lambda: self.text_down.emit(self))
         self.btn_up.clicked.connect(lambda: self.text_up.emit(self))
@@ -90,28 +92,48 @@ class MessageWidget(QWidget):
         icon_btn.setObjectName(btn_name)
         icon_btn.setFixedSize(28, 28)  # 圆形直径
         layout.addWidget(icon_btn)
-        
+
         # -- 文字描述部分 --
         text_label = QLabel(text)
         text_label.setObjectName("btn_text")
         layout.addWidget(text_label)
-        
+
         # 传递点击事件（容器整体可点击）
-        btn_container.mousePressEvent = lambda e: icon_btn.click()  
+        btn_container.mousePressEvent = lambda e: icon_btn.click()
         parent_layout.addWidget(btn_container)
-        
+
         return icon_btn  # 返回实际按钮用于信号连接
 
     def setup_bubble(self, text: str):
-        """使用 QTextEdit 实现消息气泡"""      
-        self.bubble = BubbleWidget(text, self) 
+        """使用 Widget 实现带三角的消息气泡"""
+        # 创建容器
+        self.bubble_container = QWidget()
+        self.bubble_container.setObjectName("bubble_container_me" if self.is_me else "bubble_container_other")
+
+        # 气泡主体
+        self.bubble = BubbleWidget(text, self)
         self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
+
+        self.triangle_label = QLabel(self.bubble_container)
+        self.triangle_label.setObjectName("triangle_me" if self.is_me else "triangle_other")
+        self.triangle_label.setFixedSize(12, 20)
+
+        # 容器布局设置
+        container_layout = QHBoxLayout(self.bubble_container)
+        container_layout.setContentsMargins(0, 0, 0, 0)
+        container_layout.setSpacing(0)
+        if self.is_me:
+            container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignRight)
+            container_layout.addWidget(self.triangle_label, alignment=Qt.AlignRight | Qt.AlignTop)
+        else:
+            container_layout.addWidget(self.triangle_label, alignment=Qt.AlignLeft | Qt.AlignTop)
+            container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignLeft)
 
     def enterEvent(self, event):
         """ 鼠标进入显示控制按钮 """
         self.btn_group.show()
         super().enterEvent(event)
-    
+
     def leaveEvent(self, event):
         """ 鼠标离开隐藏按钮 """
         self.btn_group.hide()

@@ -2,6 +2,9 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTextEdit
 from PyQt5.QtCore import Qt, pyqtSignal, QSize
 from PyQt5.QtGui import QIcon
 from ui.widgets.text_input import TextInput  # 单独的文本输入组件
+from ui.config import ConfigManager
+
+cfm = ConfigManager().instance()
 
 class InputArea(QWidget):
     send_clicked = pyqtSignal()
@@ -20,20 +23,21 @@ class InputArea(QWidget):
 
         self.voice_btn = QPushButton(self)
         self.voice_btn.setIconSize(QSize(35, 35))
-        self.voice_icon = QIcon("./fig/icon/voice.jpg")
-        self.voice_pressed_icon = QIcon("./fig/icon/voice_pressed.jpg")
+        #self.voice_icon = QIcon("./fig/icon/voice.jpg")
+        self.voice_icon = QIcon(cfm.get_input_icon("voice"))
+        self.voice_pressed_icon = QIcon(cfm.get_input_icon("voice_pressed"))
         self.voice_btn.setIcon(self.voice_icon)
 
         self.emoji_btn = QPushButton(self)
         self.emoji_btn.setIconSize(QSize(35, 35))
-        self.emoji_icon = QIcon("./fig/icon/emoji.jpg")
-        self.emoji_pressed_icon = QIcon("./fig/icon/emoji_pressed.jpg")
+        self.emoji_icon = QIcon(cfm.get_input_icon("emoji"))
+        self.emoji_pressed_icon = QIcon(cfm.get_input_icon("emoji_pressed"))
         self.emoji_btn.setIcon(self.emoji_icon)
 
         self.others_btn = QPushButton(self)
         self.others_btn.setIconSize(QSize(35, 35))
-        self.others_icon = QIcon("./fig/icon/others.jpg")
-        self.others_pressed_icon = QIcon("./fig/icon/others_pressed.jpg")
+        self.others_icon = QIcon(cfm.get_input_icon("others"))
+        self.others_pressed_icon = QIcon(cfm.get_input_icon("others_pressed"))
         self.others_btn.setIcon(self.others_icon)
 
         self.input_box = TextInput(self)
