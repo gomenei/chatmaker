@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt, pyqtSignal
 from ..config import ConfigManager
 from ui.widgets.avatar import AvatarWidget
 from ui.widgets.bubble import BubbleWidget
+from ui.widgets.voicebubble import VoiceBubbleWidget
 
 
 class MessageWidget(QWidget):
@@ -13,12 +14,13 @@ class MessageWidget(QWidget):
     text_up = pyqtSignal(QWidget)
     text_down = pyqtSignal(QWidget)
 
-    def __init__(self, text: str, is_me: bool, role: str, avatar_path: str, parent):
+    def __init__(self, text: str, is_me: bool, role: str, avatar_path: str, parent, message_type = "text"):
         super().__init__(parent)
         self.is_me = is_me  # 消息方向标识
         self.role = role  # 群成员标识
         self.avatar_path = avatar_path
         self.text = text
+        self.message_type = message_type
         self.init_ui()
         self.load_style()
 
@@ -111,7 +113,15 @@ class MessageWidget(QWidget):
         self.bubble_container.setObjectName("bubble_container_me" if self.is_me else "bubble_container_other")
 
         # 气泡主体
-        self.bubble = BubbleWidget(text, self)
+        if self.message_type == "voice":
+            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage.png", is_me=self.is_me, mode=self.message_type)
+        elif self.message_type == "voicecall":
+            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicecall.png", is_me=self.is_me, mode=self.message_type)
+        elif self.message_type == "videocall":
+            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/videocall.png", is_me=self.is_me, mode=self.message_type)
+        else:
+            self.bubble = BubbleWidget(text, self)
+
         self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
 
         self.triangle_label = QLabel(self.bubble_container)

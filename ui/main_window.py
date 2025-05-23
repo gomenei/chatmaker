@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QPixmap, QPainter
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, pyqtSignal
 from ui.area.chat import ChatArea
@@ -35,6 +35,7 @@ class MainWindow(QMainWindow):
 
         # 连接插入功能
         self.function_panel.insert_clicked.connect(self.handle_insert_message)
+        self.function_panel.export_clicked.connect(self.export_chat_as_image)
 
         self.setCentralWidget(main_widget)
 
@@ -46,5 +47,32 @@ class MainWindow(QMainWindow):
                 self.close()
             case "文字消息":
                 self.chat_area.scroll_area.add_message("双击编辑文字", is_me, avatar)
+            case "语音消息":
+                self.chat_area.scroll_area.add_message("1", is_me, avatar, message_type="voice")
+            case "语音通话":
+                self.chat_area.scroll_area.add_message("2", is_me, avatar, message_type="voicecall")
+            case "视频通话":
+                self.chat_area.scroll_area.add_message("3", is_me, avatar, message_type="videocall")
             case _:  # 默认情况（类似 default）
                 self.chat_area.scroll_area.add_message("功能暂未实现", is_me, avatar)
+
+    def export_chat_as_image(self):
+        visible_width = self.chat_area.width()
+        visible_height = self.chat_area.height()
+    
+        scale_factor = 2
+        export_width = visible_width * scale_factor
+        export_height = visible_height * scale_factor
+    
+        image = QPixmap(export_width, export_height)
+        image.fill(Qt.white)
+    
+        # 渲染左侧聊天区，不包括右边功能栏
+        painter = QPainter(image)
+        painter.scale(scale_factor, scale_factor)
+        self.chat_area.render(painter)
+        painter.end()
+
+        file_path, _ = QFileDialog.getSaveFileName(self, "保存聊天截图", "微信聊天模拟器截图", "PNG 图片 (*.png)")
+        if file_path:
+            image.save(file_path)
