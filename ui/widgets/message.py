@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame,
-                             QPushButton, QLabel)
+                             QPushButton, QLabel, QFileDialog)
 from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QTextImageFormat
 from ..config import ConfigManager
 from ui.widgets.avatar import AvatarWidget
 from ui.widgets.bubble import BubbleWidget
@@ -119,6 +120,12 @@ class MessageWidget(QWidget):
             self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicecall.png", is_me=self.is_me, mode=self.message_type)
         elif self.message_type == "videocall":
             self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/videocall.png", is_me=self.is_me, mode=self.message_type)
+        elif self.message_type == "photo":
+            self.bubble = BubbleWidget("", self)
+            self.bubble.insert_image(text)
+        elif self.message_type == "gif":
+            self.bubble = BubbleWidget("", self)
+            self.bubble.insert_gif(text)
         else:
             self.bubble = BubbleWidget(text, self)
 

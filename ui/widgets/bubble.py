@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QSizePolicy, QTextBrowser, QTextEdit
-from PyQt5.QtGui import QTextDocument, QFontMetrics, QTextImageFormat, QTextCursor, QTextOption
+from PyQt5.QtWidgets import QSizePolicy, QTextBrowser, QTextEdit, QLabel
+from PyQt5.QtGui import QTextDocument, QFontMetrics, QTextImageFormat, QTextCursor, QTextOption, QMovie
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QSizeF
 from sympy.printing.pretty.pretty_symbology import line_width
 from ui.config import ConfigManager
@@ -116,3 +116,29 @@ class BubbleWidget(QTextEdit):
 
         self.document().markContentsDirty(0, self.document().characterCount())
         self.update_size()
+
+    def insert_image(self, file_path):
+        cursor = self.textCursor()
+        image_format = QTextImageFormat()
+        image_format.setName(file_path)
+        cursor.insertImage(image_format)
+        self.update_size()
+
+    def insert_gif(self, file_path):
+        # 创建动画Label
+        gif_label = QLabel(self)
+        movie = QMovie(file_path)
+        movie.setScaledSize(movie.currentImage().size().scaled(100, 100, Qt.KeepAspectRatio))
+        gif_label.setMovie(movie)
+        movie.start()
+
+        # 在文本框中插入占位符
+        cursor = self.textCursor()
+        cursor.insertText(" ")  # 插入空格占位
+        self.update()
+
+        # 定位Label到占位符位置
+        rect = self.cursorRect(cursor)
+        gif_label.move(rect.x() - 5, rect.y() - 5)  # 微调位置
+        gif_label.show()
+

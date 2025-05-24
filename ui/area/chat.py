@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLineEdit, QTextEdit, QPlainTextEdit
 from PyQt5.QtGui import QPixmap, QFont
-from PyQt5.QtCore import pyqtSignal, QTimer, Qt, QPropertyAnimation, QEasingCurve, QEvent
+from PyQt5.QtCore import pyqtSignal, QTimer, Qt, QPropertyAnimation, QEasingCurve, QEvent, QSize
 from ui.area.scroll import ScrollArea
 from ui.area.input import InputArea
 from ui.config import ConfigManager
@@ -26,6 +26,7 @@ class ChatArea(QWidget):
         self.setup_connections()
 
     def init_ui(self):
+        self.setFixedWidth(int(self.parent().width() / 3 * 2))
         # 主布局设置
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
@@ -37,7 +38,7 @@ class ChatArea(QWidget):
         # self.title_bar.back_clicked.connect(self.handle_back)
         # ===== 3. 原有聊天区域 =====
         self.scroll_area = ScrollArea(self)
-        self.input_widget = InputArea()
+        self.input_widget = InputArea(self)
         # ===== 4. emoji区域 =====
         self.emoji_area = EmojiArea()
         self.emoji_area.hide()
@@ -54,7 +55,7 @@ class ChatArea(QWidget):
         self.main_layout.setStretch(1, 0)  # 标题栏
         self.main_layout.setStretch(2, 1)  # 消息区
         self.main_layout.setStretch(3, 0)  # 输入区
-        self.main_layout.setStretch(4, 0)
+        self.main_layout.setStretch(4, 0)  # 表情区
 
     def setup_connections(self):
         # 连接发送信号与消息处理
@@ -149,4 +150,5 @@ class ChatArea(QWidget):
         #     QTimer.singleShot(0, lambda: last_focused.setFocus() if last_focused else None)
         #     return True  # 阻止事件传播
         return super().eventFilter(obj, event)
+
 

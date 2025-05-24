@@ -1,5 +1,5 @@
 from PyQt5.QtGui import QIcon, QPixmap, QPainter
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QMainWindow, QWidget, QHBoxLayout, QVBoxLayout, QApplication, QFileDialog, QSizePolicy
 from PyQt5.QtCore import Qt, pyqtSignal
 from ui.area.chat import ChatArea
 from ui.area.function import FunctionArea
@@ -13,7 +13,7 @@ class MainWindow(QMainWindow):
 
     def init_ui(self):
         self.setWindowTitle("ChatMaker")
-        self.setFixedSize(750, 1000)
+        self.set_adaptive_size()  # 根据屏幕尺寸调整窗口大小
         self.setStyleSheet("""
             QWidget {
                 background-color: #f7f7f7;
@@ -27,17 +27,34 @@ class MainWindow(QMainWindow):
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
-        self.chat_area = ChatArea()
+        self.chat_area = ChatArea(self)
         main_layout.addWidget(self.chat_area, stretch=2)
 
         self.function_panel = FunctionArea()
         main_layout.addWidget(self.function_panel, stretch=1)
-
+        
         # 连接插入功能
         self.function_panel.insert_clicked.connect(self.handle_insert_message)
         self.function_panel.export_clicked.connect(self.export_chat_as_image)
 
         self.setCentralWidget(main_widget)
+
+    def set_adaptive_size(self):
+        """根据当前屏幕尺寸调整窗口大小"""
+        screen = QApplication.primaryScreen()  # 获取主屏幕
+        screen_rect = screen.availableGeometry()  # 获取可用屏幕区域（排除任务栏等）
+        # 设置窗口大小为屏幕宽度的30%和高度的70%（可根据需要调整比例）
+        width = int(screen_rect.width() * 0.3)  
+        height = int(screen_rect.height() * 0.7)  
+        print("main_window width =", width)
+        print("main_window height =", height)
+        self.resize(width, height)  # 调整窗口大小
+        self.setFixedWidth(width)
+        # 让窗口居中显示
+        self.move(
+            screen_rect.left() + (screen_rect.width() - width) // 2,
+            screen_rect.top() + (screen_rect.height() - height) // 2
+        )
 
     def handle_insert_message(self, text, is_me):
         """处理功能栏插入的消息"""
@@ -53,6 +70,20 @@ class MainWindow(QMainWindow):
                 self.chat_area.scroll_area.add_message("2", is_me, avatar, message_type="voicecall")
             case "视频通话":
                 self.chat_area.scroll_area.add_message("3", is_me, avatar, message_type="videocall")
+            case "图片消息":
+                file_path, _ = QFileDialog.getOpenFileName(
+                    self, "选择图片", "", 
+                    "图片文件 (*.png *.jpg *.jpeg);;所有文件 (*)"
+                )
+                if file_path:
+                    self.chat_area.scroll_area.add_message(file_path, is_me, avatar, message_type="photo")
+            case "表情包":
+                file_path, _ = QFileDialog.getOpenFileName(
+                    self, "选择GIF表情包", "", 
+                    "GIF动画 (*.gif);;所有文件 (*)"
+                )
+                if file_path:
+                    self.chat_area.scroll_area.add_message(file_path, is_me, avatar, message_type="gif")
             case _:  # 默认情况（类似 default）
                 self.chat_area.scroll_area.add_message("功能暂未实现", is_me, avatar)
 

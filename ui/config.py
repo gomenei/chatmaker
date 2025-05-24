@@ -18,7 +18,13 @@ class ConfigManager(QObject):
             ConfigManager._instance = self
 
             self._icon_path = {
-                "文字消息": "./fig/icon/text_message.png",
+                "文字消息": "./fig/icon/text-message.png",
+                "语音消息": "./fig/icon/voice-message.png",
+                "语音通话": "./fig/icon/voice-call.png",
+                "视频通话": "./fig/icon/video-call.png",
+                "图片消息": "./fig/icon/photo-message.png",
+                "表情包": "./fig/icon/gif.png",
+                "已领取": "./fig/icon/recieve-pocket.png",
                 "插入时间": "./fig/icon/time.png",
             }
             self.emoji_map = {

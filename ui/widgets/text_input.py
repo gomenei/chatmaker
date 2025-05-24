@@ -18,6 +18,11 @@ class TextInput(QTextEdit):
         self.setup_connections()
 
     def init_ui(self):
+        parent_width = self.parent().width()
+        self.origin_width = int(parent_width * 21 / 30)
+        self.input_width = int(parent_width * 0.63)
+        self.orgin_height = int(parent_width * 0.138)
+        self.setFixedHeight(int(self.orgin_height))
         self.setFont(QFont("黑体", 12))
         self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -26,13 +31,13 @@ class TextInput(QTextEdit):
         # 动态高度计算
         font_metrics = self.fontMetrics()
         line_height = font_metrics.lineSpacing()
-        self.min_input_height = line_height + 43  # 1行 + padding
-        self.max_input_height = 4 * line_height + 43  # 最大8行
-        self.setMinimumHeight(self.min_input_height)
+        # print("parent width = ", self.parent().width())
+        print("line_height = ", line_height)
+        # print("height =", self.height())
+        self.min_input_height = self.orgin_height  # 1行 + padding
+        self.max_input_height = 3 * line_height + self.orgin_height  # 最大8行
+        # self.setMinimumHeight(self.min_input_height)
         self.setMaximumHeight(self.max_input_height)
-
-        #设置初始宽度
-        self.setFixedWidth(350)
 
         self.adjust_size()
 
@@ -51,18 +56,22 @@ class TextInput(QTextEdit):
         """动态调整输入框形状"""
         """动态调整输入框宽度"""
         if self.toPlainText().strip():
-            self.setFixedWidth(308)
+            self.setFixedWidth(self.input_width)
             self.text_input.emit(True)
         else:
-            self.setFixedWidth(350)
+            self.setFixedWidth(self.origin_width)
             self.text_input.emit(False)
 
         """动态调整输入框高度"""
         doc = self.document()
         margin = self.contentsMargins()
+        print("margin height =", margin.top() + margin.bottom())
         desired_height = doc.documentLayout().documentSize().height() + margin.top() + margin.bottom()
-        desired_height = min(max(desired_height, self.min_input_height), self.max_input_height)
-        self.setFixedHeight(int(desired_height))
+        # desired_height = min(max(desired_height, self.min_input_height), self.max_input_height)
+        html_text = doc.toHtml()
+        print("text height =", desired_height)
+        self.setFixedHeight(int(self.orgin_height))
+        # self.setFixedHeight(int(desired_height))
     
     def get_emoji_html(self, emoji_code):
         """返回表情图片的HTML格式"""
