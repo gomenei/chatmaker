@@ -38,6 +38,48 @@ class ConfigManager(QObject):
                 "others": "./fig/icon/others.jpg",
                 "others_pressed": "./fig/icon/others_pressed.jpg",
             }
+            self.huawei_status_icon_path = {
+                "eye_protecting": "./fig/status/huawei_status/eye_protecting.png",
+                "nfc": "./fig/status/huawei_status/nfc.png",
+                "clock": "./fig/status/huawei_status/clock.png",
+
+                "bluetooth": "./fig/status/huawei_status/bluetooth.png",
+                "bluetooth_connected": "./fig/status/huawei_status/bluetooth_connected.png",
+                "bluetooth_electricity": "./fig/status/huawei_status/bluetooth_electricity.png",
+
+                "do_not_disturb": "./fig/status/huawei_status/do_not_disturb.png",
+
+                "vibrate": "./fig/status/huawei_status/vibrate.png",
+                "mute": "./fig/status/huawei_status/mute.png",
+
+                "flying": "./fig/status/huawei_status/flying.png",
+
+                "hotspot": "./fig/status/huawei_status/hotspot.png",
+
+                "normal_wifi": "./fig/status/huawei_status/normal_wifi.png",
+                "hotspot_wifi": "./fig/status/huawei_status/hotspot_wifi.png",
+                "abnormal_wifi": "./fig/status/huawei_status/abnormal_wifi.png",
+
+                "signal_4G": "./fig/status/huawei_status/signal_4G.png",
+                "signal_5G": "./fig/status/huawei_status/signal_5G.png",
+                "signal_out": "./fig/status/huawei_status/signal_out.png",
+
+                "battery_full": "./fig/status/huawei_status/battery_full.png",
+                "battery_half": "./fig/status/huawei_status/battery_half.png",
+                "battery_out": "./fig/status/huawei_status/battery_out.png",
+                "charging": "./fig/status/huawei_status/charging.png",
+                "super_charging": "./fig/status/huawei_status/super_charging.png",
+                "save_electricity": "./fig/status/huawei_status/save_electricity.png"
+            }
+
+            self.apple_status_icon_path = {
+                "signal": "./fig/status/apple_status/signal.png",
+                "flying": "./fig/status/apple_status/flying.png",
+
+                "wifi": "./fig/status/apple_status/wifi.png",
+
+                "battery": "./fig/status/apple_status/battery.png",
+            }
 
     @classmethod
     def instance(cls):
@@ -57,3 +99,9 @@ class ConfigManager(QObject):
 
     def get_input_icon(self, icon_type: str) -> str:
         return self.input_icon_path.get(icon_type, "")
+
+    def get_huawei_status_icon(self, status: str) -> str:
+        return self.huawei_status_icon_path.get(status, "")
+
+    def get_apple_status_icon(self, status: str) -> str:
+        return self.apple_status_icon_path.get(status, "")
