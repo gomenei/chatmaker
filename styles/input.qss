@@ -2,9 +2,7 @@
 QTextEdit {
     background: #ffffff;     /* 微信同款浅灰背景 */
     border-radius: 8px;      /* 更大的圆角 */
-    padding: 8px 12px;       /* 舒适的边距 */
     color: #333;              /* 文本颜色 */
-    margin: 12px 0px;       /* 与边界及其他控件间距*/
 }
 
 /* 发送按钮样式 */
@@ -36,5 +34,5 @@ QWidget{
 QPushButton{
     border: none;
     background: transparent;
-    margin-bottom: 15px;
+    
 }

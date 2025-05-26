@@ -26,7 +26,8 @@ class ChatArea(QWidget):
         self.setup_connections()
 
     def init_ui(self):
-        self.setFixedWidth(int(self.parent().width() / 3 * 2))
+
+        self.setFixedWidth(int(self.parent().width() * (2 / 3)))
         # 主布局设置
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(0, 0, 0, 0)

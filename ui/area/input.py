@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QWidget, QHBoxLayout, QPushButton, QTextEdit
+from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QTextEdit
 from PyQt5.QtCore import Qt, pyqtSignal, QSize
 from PyQt5.QtGui import QIcon
 from ui.widgets.text_input import TextInput  # 单独的文本输入组件
@@ -19,53 +19,55 @@ class InputArea(QWidget):
 
     def init_ui(self):
         width = self.parent().width()
-        print("input width =", width)
+        height = int(width * (19 / 135))
+        print("input size =", (width, height))
         self.setFixedWidth(width)
-        self.setFixedHeight(int(width * 0.14))
-        icon_width = int(width / 90 * 7)
+        self.setMinimumHeight(height)
+        # print("icon size =", (icon_width, icon_width))
         self.main_layout = QHBoxLayout(self)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
+        self.main_layout.setSpacing(0)
 
+        icon_width = int(width * (13 / 108))
+        icon_height = height
+        print("voice size =", (icon_width, icon_height))
         self.voice_btn = QPushButton(self)
-        self.voice_btn.setIconSize(QSize(icon_width, icon_width))
-        #self.voice_icon = QIcon("./fig/icon/voice.jpg")
+        self.voice_btn.setIconSize(QSize(icon_width, icon_height))
         self.voice_icon = QIcon(cfm.get_input_icon("voice"))
         self.voice_pressed_icon = QIcon(cfm.get_input_icon("voice_pressed"))
         self.voice_btn.setIcon(self.voice_icon)
-        self.voice_btn.setStyleSheet("border: 1px solid red;")
-        print("icon_width =", icon_width)
+        self.voice_btn.setFixedSize(icon_width, icon_height)
 
         self.emoji_btn = QPushButton(self)
-        self.emoji_btn.setIconSize(QSize(icon_width, icon_width))
+        self.emoji_btn.setIconSize(QSize(icon_width, icon_height))
         self.emoji_icon = QIcon(cfm.get_input_icon("emoji"))
         self.emoji_pressed_icon = QIcon(cfm.get_input_icon("emoji_pressed"))
         self.emoji_btn.setIcon(self.emoji_icon)
+        self.emoji_btn.setFixedSize(icon_width, icon_height)
 
         self.others_btn = QPushButton(self)
-        self.others_btn.setIconSize(QSize(icon_width, icon_width))
+        self.others_btn.setIconSize(QSize(icon_width, icon_height))
         self.others_icon = QIcon(cfm.get_input_icon("others"))
         self.others_pressed_icon = QIcon(cfm.get_input_icon("others_pressed"))
         self.others_btn.setIcon(self.others_icon)
+        self.others_btn.setFixedSize(icon_width, icon_height)
 
         self.input_box = TextInput(self)
         self.input_box.setStyleSheet("border: 1px solid red;")
 
         self.send_btn = QPushButton("发送")
-        btn_width = int(0.1533 * width)
-        self.send_btn.setFixedSize(
-            btn_width,
-            int (btn_width * 0.7)
-        )
-        print("send btn width = ", btn_width)
-        print("send btn height = ", int(btn_width * 0.84))
+        btn_width = int(width * (3 / 20))
+        btn_height = int(width * (43 / 540))
+        print("send_btn size =", (btn_width, btn_height))
+        self.send_btn.setFixedSize(btn_width, btn_height)
         
         self.send_btn.setObjectName("send_btn")
 
         self.main_layout.addWidget(self.voice_btn, alignment=Qt.AlignBottom)
-        self.main_layout.addWidget(self.input_box, alignment=Qt.AlignBottom)
+        self.main_layout.addWidget(self.input_box)
         self.main_layout.addWidget(self.emoji_btn, alignment=Qt.AlignBottom)
         self.main_layout.addWidget(self.others_btn, alignment=Qt.AlignBottom)
-        self.main_layout.addWidget(self.send_btn, alignment=Qt.AlignBottom)
+        self.main_layout.addWidget(self.send_btn)
 
         self.send_btn.hide()
 

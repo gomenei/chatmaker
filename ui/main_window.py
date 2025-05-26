@@ -44,10 +44,9 @@ class MainWindow(QMainWindow):
         screen = QApplication.primaryScreen()  # 获取主屏幕
         screen_rect = screen.availableGeometry()  # 获取可用屏幕区域（排除任务栏等）
         # 设置窗口大小为屏幕宽度的30%和高度的70%（可根据需要调整比例）
-        width = int(screen_rect.width() * 0.3)  
-        height = int(screen_rect.height() * 0.7)  
-        print("main_window width =", width)
-        print("main_window height =", height)
+        width = int(screen_rect.width() * (81 / 256))  
+        height = int(screen_rect.height() * (150 / 191))  
+        print("main_window size =", (width, height))
         self.resize(width, height)  # 调整窗口大小
         self.setFixedWidth(width)
         # 让窗口居中显示
