@@ -51,6 +51,20 @@ class EmojiArea(QFrame):
             btn = QPushButton()
             btn.setFixedSize(40, 40)
             btn.setToolTip(emoji_code)  # 悬停显示表情代号
+
+            btn.setStyleSheet("""
+                QPushButton {
+                    border-radius: 5px;
+                }
+                QPushButton:hover {
+                    background-color: #d3d3d3;
+                    border-radius: 5px;
+                }
+                QPushButton:pressed {
+                    background-color: #d3d3d3;
+                    border-radius: 5px;
+                }
+            """)
             
             # 加载图片并缩放
             pixmap = QPixmap(img_path)
