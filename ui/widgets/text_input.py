@@ -103,16 +103,16 @@ class TextInput(QTextEdit):
         margin_height = self.contentsMargins().top() + self.contentsMargins().bottom()
         
         doc = self.document()
-        print("--- 文档状态 ---")
-        print(f"行高: {QFontMetrics(self.font()).lineSpacing()}px")
-        print(f"文档总高度: {doc.size().height()}px")
-        print(f"内容边距: {doc.documentMargin()}px")
+        # print("--- 文档状态 ---")
+        # print(f"行高: {QFontMetrics(self.font()).lineSpacing()}px")
+        # print(f"文档总高度: {doc.size().height()}px")
+        # print(f"内容边距: {doc.documentMargin()}px")
         
         # 打印段落格式
         cursor = self.textCursor()
         block_format = cursor.blockFormat()
-        print(f"段落行高类型: {block_format.lineHeightType()}")
-        print(f"段落行高值: {block_format.lineHeight()}")
+        # print(f"段落行高类型: {block_format.lineHeightType()}")
+        # print(f"段落行高值: {block_format.lineHeight()}")
         if doc_height >= self.max_input_height:
             self.setFixedHeight(int(self.max_input_height))
         else:
@@ -122,7 +122,7 @@ class TextInput(QTextEdit):
     def get_emoji_html(self, emoji_code):
         font_metrics = QFontMetrics(self.font())
         emoji_size = font_metrics.lineSpacing()
-        print("emoji width", emoji_size)
+        # print("emoji width", emoji_size)
         """返回表情图片的HTML格式"""
         if emoji_code in self.emoji_map:
             return f'''<img src="{self.emoji_map[emoji_code]}" 
