@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame,
-                             QPushButton, QLabel, QFileDialog)
+                             QPushButton, QLabel, QFileDialog, QSizePolicy)
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QTextImageFormat
 from ..config import ConfigManager
@@ -27,6 +27,7 @@ class MessageWidget(QWidget):
 
     def init_ui(self):
         """初始化界面布局"""
+        self.parent_width = self.parent().width()
         self.setup_avatar()
         self.setup_bubble(self.text)
         self.setup_button()
@@ -57,10 +58,11 @@ class MessageWidget(QWidget):
         self.setStyleSheet(load_style("styles/message.qss"))
 
     def setup_avatar(self):
+        avatar_width = int(self.parent_width / 10)
         self.avatar_label = AvatarWidget(
             role="me" if self.is_me else "other",
             initial_path=self.avatar_path,
-            avatar_size=40
+            avatar_size=avatar_width
         )
 
     def setup_button(self):
@@ -68,10 +70,13 @@ class MessageWidget(QWidget):
         self.btn_group = QFrame()
         self.btn_group.setObjectName("btn_group")
         self.btn_group.hide()
+        btn_group_width = int(self.parent_width * (5 / 9))
+        btn_group_height = int(self.parent_width * (1 / 14))
+        self.btn_group.setFixedSize(btn_group_width, btn_group_height)
 
         # 按钮布局
         layout = QHBoxLayout(self.btn_group)
-        layout.setContentsMargins(5, 0, 5, 0)
+        layout.setContentsMargins(0, 0, 0, 0)
         # 操作按钮
         self.btn_up = self.setup_signal_button("↑", "上移", "btn_up", layout)
         self.btn_down = self.setup_signal_button("↓", "下移", "btn_down", layout)
@@ -87,13 +92,14 @@ class MessageWidget(QWidget):
         btn_container.setObjectName("btn_container")
         # 整体横向布局
         layout = QHBoxLayout(btn_container)
-        layout.setContentsMargins(15, 0, 5, 0)
-        layout.setSpacing(2)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(0)
 
         # -- 圆形图标部分 --
         icon_btn = QPushButton(icon)
         icon_btn.setObjectName(btn_name)
-        icon_btn.setFixedSize(28, 28)  # 圆形直径
+        icon_btn_size = int(self.parent_width / 20)
+        icon_btn.setFixedSize(icon_btn_size, icon_btn_size)  # 圆形直径
         layout.addWidget(icon_btn)
 
         # -- 文字描述部分 --

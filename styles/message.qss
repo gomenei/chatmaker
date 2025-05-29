@@ -8,10 +8,6 @@ QWidget {
 MessageWidget > QFrame#btn_group {
     background: rgba(255,255,255,0);
     border-radius: 15px;
-    min-width: 300px;
-    max-width: 300px;
-    min-height: 40px;
-    max-height: 40px;  /* 这相当于固定尺寸 */
 }
 
 /* 自己容器样式 */
@@ -84,13 +80,7 @@ MessageWidget QWidget#btn_container {
     max-height: 40px;  /* 这相当于固定尺寸 */
 }
 
-/* 图标按钮通用样式 */
-MessageWidget QPushButton#icon_btn {
-    border: none;
-    border-radius: 14px;  /* 50%圆形 */
-    color: white;
-    font-size: 16px;
-}
+
 
 /* 上移按钮样式 */
 MessageWidget QPushButton#btn_up {
@@ -119,6 +109,6 @@ MessageWidget QPushButton#btn_delete:hover {
 /* 按钮文字样式 */
 MessageWidget QLabel#btn_text {
     color: #666;
-    font: 12px "Microsoft YaHei";
+    font: 14px "Microsoft YaHei";
     margin-right: 5px;
 }

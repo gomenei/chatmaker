@@ -96,8 +96,8 @@ class BubbleWidget(QTextEdit):
 
     def showEvent(self, event):
         super().showEvent(event)
-        QTimer.singleShot(10, lambda: self.update_size())  # 延迟确保布局完成
-        QTimer.singleShot(30, lambda: self.update_size())  # 二次刷新解决图片加载延迟
+        QTimer.singleShot(0, lambda: self.update_size())  # 延迟确保布局完成
+        #QTimer.singleShot(30, lambda: self.update_size())  # 二次刷新解决图片加载延迟
 
     def insert_emoji(self, emoji_code):
         """使用QTextImageFormat插入表情"""

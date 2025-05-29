@@ -15,6 +15,7 @@ class ScrollArea(QScrollArea):
     def init_ui(self):
         self.setWidgetResizable(True)
         self.setFrameShape(QFrame.NoFrame)
+        self.setFixedWidth(self.parent().width())
         
         self.message_container = QWidget()
         self.message_layout = QVBoxLayout(self.message_container)
