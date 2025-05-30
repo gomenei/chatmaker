@@ -26,6 +26,10 @@ class ConfigManager(QObject):
                 "图片消息": "./fig/icon/photo-message.png",
                 "表情包": "./fig/icon/gif.png",
                 "已领取": "./fig/icon/recieve-pocket.png",
+                "发送转账": "./fig/icon/transfer_send.png",
+                "收到转账": "./fig/icon/transfer_receive.png",
+                "发送红包": "./fig/icon/red_pocket_send.png",
+                "收到红包": "./fig/icon/red_pocket_receive.png",
                 "插入时间": "./fig/icon/time.png",
             }
             self.emoji_map = {
