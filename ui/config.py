@@ -1,4 +1,5 @@
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, QFile
+
 
 class ConfigManager(QObject):
     """
@@ -81,6 +82,17 @@ class ConfigManager(QObject):
                 "battery": "./fig/status/apple_status/battery.png",
             }
 
+            self.pocket_path = {
+                "red_pocket_send_me": "./fig/pocket/red_pocket_send_me.png",
+                "red_pocket_send_other": "./fig/pocket/red_pocket_send_other.png",
+                "red_pocket_receive_me": "./fig/pocket/red_pocket_receive_me.png",
+                "red_pocket_receive_other": "./fig/pocket/red_pocket_receive_other.png",
+                "transfer_send_me": "./fig/pocket/transfer_send_me.png",
+                "transfer_send_other": "./fig/pocket/transfer_send_other.png",
+                "transfer_receive_me": "./fig/pocket/transfer_receive_me.png",
+                "transfer_receive_other": "./fig/pocket/transfer_receive_other.png",
+            }
+
     @classmethod
     def instance(cls):
         if cls._instance is None:
@@ -105,3 +117,10 @@ class ConfigManager(QObject):
 
     def get_apple_status_icon(self, status: str) -> str:
         return self.apple_status_icon_path.get(status, "")
+
+    def get_pocket_path(self, pocket_type: str) -> str:
+        #检查
+        path = self.pocket_path.get(pocket_type, "")
+        if path and not QFile.exists(path):
+            print(f"Warning: Pocket image not found: {path}")
+        return path

@@ -83,6 +83,14 @@ class MainWindow(QMainWindow):
                 )
                 if file_path:
                     self.chat_area.scroll_area.add_message(file_path, is_me, avatar, message_type="gif")
+            case "发送转账":
+                self.chat_area.scroll_area.add_message("pocket", is_me, avatar, message_type="transfer_send")
+            case "领取转账":
+                self.chat_area.scroll_area.add_message("pocket", is_me, avatar, message_type="transfer_receive")
+            case "发送红包":
+                self.chat_area.scroll_area.add_message("pocket", is_me, avatar, message_type="red_pocket_send")
+            case "领取红包":
+                self.chat_area.scroll_area.add_message("pocket", is_me, avatar, message_type="red_pocket_receive")
             case _:  # 默认情况（类似 default）
                 self.chat_area.scroll_area.add_message("功能暂未实现", is_me, avatar)
 

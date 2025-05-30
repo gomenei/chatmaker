@@ -34,7 +34,7 @@ class FunctionArea(QWidget):
         # ==== 插入对话按钮 ====
         size = 120
         self.message_btn = ExpandButton("插入对话", [["文字消息", "语音消息", "语音通话"], ["视频通话", "图片消息", "表情包"]], (size * 2, size * 3))
-        self.pocket_btn = ExpandButton("转账/红包", [["发送转账"], ["已被接收"], ["已收款"], ["发送红包"], ["已领取"]], (size, size * 5))
+        self.pocket_btn = ExpandButton("转账/红包", [["发送转账", "领取转账"], ["发送红包", "领取红包"]], (size * 2, size * 2))
         self.time_btn = ExpandButton("插入时间", [["插入时间", "拍一拍"]], (size, 2 * size))
         self.other_btn = ExpandButton("更多功能", [["其他消息"]], (size, size))
         self.exit_btn = ExpandButton("退出", [[]], (0, 0))
