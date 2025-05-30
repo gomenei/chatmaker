@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame,
-                             QPushButton, QLabel, QFileDialog)
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QTextImageFormat
+from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame, QSizePolicy,
+                             QPushButton, QLabel, QFileDialog, QLineEdit, QTextEdit)
+from PyQt5.QtCore import Qt, pyqtSignal, QEvent, QTime
+from PyQt5.QtGui import QTextImageFormat, QPixmap, QTextOption
 from ..config import ConfigManager
 from ui.widgets.avatar import AvatarWidget
 from ui.widgets.bubble import BubbleWidget
@@ -39,15 +39,19 @@ class MessageWidget(QWidget):
         """气泡 + 头像设置"""
         self.chatbubble_layout = QHBoxLayout()
         self.chatbubble_layout.setContentsMargins(0, 0, 0, 0)
-
-        if self.is_me:
+        if self.message_type == "system":
             self.chatbubble_layout.addStretch()
-            self.chatbubble_layout.addWidget(self.bubble_container)
-            self.chatbubble_layout.addWidget(self.avatar_label, alignment=Qt.AlignTop)
+            self.chatbubble_layout.addWidget(self.bubble_container, alignment=Qt.AlignCenter)
+            self.chatbubble_layout.addStretch()
         else:
-            self.chatbubble_layout.addWidget(self.avatar_label, alignment=Qt.AlignTop)
-            self.chatbubble_layout.addWidget(self.bubble_container)
-            self.chatbubble_layout.addStretch()
+            if self.is_me:
+                self.chatbubble_layout.addStretch()
+                self.chatbubble_layout.addWidget(self.bubble_container)
+                self.chatbubble_layout.addWidget(self.avatar_label, alignment=Qt.AlignTop)
+            else:
+                self.chatbubble_layout.addWidget(self.avatar_label, alignment=Qt.AlignTop)
+                self.chatbubble_layout.addWidget(self.bubble_container)
+                self.chatbubble_layout.addStretch()
 
         self.main_layout.addLayout(self.chatbubble_layout)
         self.main_layout.addWidget(self.btn_group, alignment=Qt.AlignHCenter)
@@ -169,3 +173,91 @@ class MessageWidget(QWidget):
         """ 鼠标离开隐藏按钮 """
         self.btn_group.hide()
         super().leaveEvent(event)
+
+class SystemMessageWidget(MessageWidget):
+    def __init__(self, is_me=True, mode="time", target_name="对方", parent=None):
+        self.mode = mode
+        self.target_name = target_name
+        self.edit = None
+        self.bubble_container = QWidget() 
+        super().__init__(
+            text="", is_me=is_me, role="", avatar_path="", parent=parent, message_type="system"
+        )
+        default_text = self._default_text()
+        self.setup_bubble(default_text)
+        self.bubble = self.bubble_container
+        self.avatar_label.hide()
+        self.triangle_label = QWidget()  # 防止父类逻辑访问时报错
+        self.triangle_label.hide()
+
+    def _default_text(self):
+        sender = "你" if self.is_me else self.target_name
+        receiver = self.target_name if self.is_me else "你"
+
+        if self.mode == "time":
+            return QTime.currentTime().toString("HH:mm")
+        elif self.mode == "tickle":
+            return f"{sender}拍了拍{receiver}"
+        elif self.mode == "red envelope":
+            icon_path = "fig/icon/red_envelope.svg"
+            icon_img = f'<img src="{icon_path}" width="18" height="20" style="vertical-align: top; margin-right:2px;">'
+            return f"{icon_img} {sender}领取了{receiver}的<span style=\"color: #DAA520;\">红包</span>"
+        elif self.mode == "withdraw":
+            return f"{sender}撤回了一条消息"
+        elif self.mode == "transfer":
+            return "收款方24小时内未接收你的<span style=\"color:dodgerblue;\">转账</span>，已过期"
+        return ""
+    def setup_bubble(self, default_text: str):
+        layout = self.bubble_container.layout()
+        if layout is None:
+            layout = QHBoxLayout()
+            self.bubble_container.setLayout(layout)
+        else:
+            # 清空旧布局内容（防止重复添加）
+            while layout.count():
+                item = layout.takeAt(0)
+                widget = item.widget()
+                if widget:
+                    widget.setParent(None)
+
+        self.bubble_container.setObjectName("bubble_container_system")
+        layout.setContentsMargins(0, 6, 0, 6)
+        layout.setSpacing(4)
+        layout.setAlignment(Qt.AlignCenter)
+
+        content_layout = QHBoxLayout()
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(0)
+
+        if self.mode == "transfer":
+            self.edit = QLabel()
+            self.edit.setText(self._default_text())
+            self.edit.setTextFormat(Qt.RichText)
+            self.edit.setStyleSheet(
+                "border: none; background: transparent; font-size: 16px; color: gray;" 
+            )
+            self.edit.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+            content_layout.addWidget(self.edit, 0, Qt.AlignVCenter)
+        else:
+            self.edit = QTextEdit()
+            self.edit.setHtml(default_text)
+            self.edit.setStyleSheet(
+                "border: none; background: transparent; font-size: 15px; color: gray;" \
+                "padding: 0px; margin: 0px;"
+            )
+            self.edit.setWordWrapMode(QTextOption.NoWrap)
+            self.edit.setAlignment(Qt.AlignCenter)
+            self.edit.setFixedHeight(24) 
+            self.edit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            self.edit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+            self.edit.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+            content_layout.addWidget(self.edit)
+        content_widget = QWidget()
+        content_widget.setLayout(content_layout)
+
+        layout.addStretch()
+        layout.addWidget(content_widget)
+        layout.addStretch()
+
+    def text(self):
+        return self.edit.toHtml() if self.edit else ""
