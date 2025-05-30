@@ -1,7 +1,7 @@
-from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QFrame
+from PyQt5.QtWidgets import QScrollArea, QWidget, QVBoxLayout, QFrame, QHBoxLayout
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal
 from ui.config import ConfigManager
-from ui.widgets.message import MessageWidget
+from ui.widgets.message import MessageWidget, SystemMessageWidget
 
 class ScrollArea(QScrollArea):
     def __init__(self, parent=None):
@@ -51,7 +51,29 @@ class ScrollArea(QScrollArea):
         message_widget.text_down.connect(self.move_message_down)
         self.scroll_to_bottom()  # 滚动到底部
         QTimer.singleShot(50, self.scroll_to_bottom)
+    def add_system_message(self, is_me, mode="time"):
+        system_message_widget = SystemMessageWidget(
+            is_me = is_me, 
+            mode = mode
+        )
+        container = QWidget()
+        layout = QHBoxLayout(container)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setAlignment(Qt.AlignCenter)
+        layout.addWidget(system_message_widget)
 
+        self.message_layout.addWidget(container)
+        self.message_widgets.append(container)  # 记录 container
+
+        # 为了让信号传回来能识别 container，可以用 lambda 绑定 container
+        system_message_widget.text_deleted.connect(lambda: self.remove_message(container))
+        system_message_widget.text_up.connect(lambda: self.move_message_up(container))
+        system_message_widget.text_down.connect(lambda: self.move_message_down(container))
+
+        self.scroll_to_bottom()
+        QTimer.singleShot(50, self.scroll_to_bottom)
+
+            
     def remove_message(self, widget):
         if widget in self.message_widgets:
             self.message_layout.removeWidget(widget)

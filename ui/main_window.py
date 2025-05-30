@@ -83,6 +83,16 @@ class MainWindow(QMainWindow):
                 )
                 if file_path:
                     self.chat_area.scroll_area.add_message(file_path, is_me, avatar, message_type="gif")
+            case "插入时间":
+                self.chat_area.scroll_area.add_system_message(is_me, mode="time")
+            case "拍一拍":
+                self.chat_area.scroll_area.add_system_message(is_me, mode="tickle")
+            case "领取红包":
+                self.chat_area.scroll_area.add_system_message(is_me, mode="red envelope")
+            case "转账过期":
+                self.chat_area.scroll_area.add_system_message(is_me, mode="transfer")
+            case "撤回消息":
+                self.chat_area.scroll_area.add_system_message(is_me, mode="withdraw")
             case _:  # 默认情况（类似 default）
                 self.chat_area.scroll_area.add_message("功能暂未实现", is_me, avatar)
 
