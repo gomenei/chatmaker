@@ -31,6 +31,10 @@ class ConfigManager(QObject):
                 "发送红包": "./fig/icon/red_pocket_send.png",
                 "收到红包": "./fig/icon/red_pocket_receive.png",
                 "插入时间": "./fig/icon/time.png",
+                "拍一拍": "./fig/icon/tickle.png",
+                "领取红包": "./fig/icon/red_pocket.png",
+                "转账过期": "./fig/icon/transfer__.png",
+                "撤回消息": "./fig/icon/revoke.png",
             }
             self.emoji_map = {
                 f"{i}": f"./fig/emojis/{i}.gif" for i in range(1, 109)
