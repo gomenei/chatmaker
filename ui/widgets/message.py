@@ -23,6 +23,8 @@ class MessageWidget(QWidget):
         self.avatar_path = avatar_path
         self.text = text
         self.message_type = message_type
+        self.config = ConfigManager().instance()
+        self.refuse = False
         self.init_ui()
         self.load_style()
 
@@ -81,10 +83,12 @@ class MessageWidget(QWidget):
         self.btn_up = self.setup_signal_button("↑", "上移", "btn_up", layout)
         self.btn_down = self.setup_signal_button("↓", "下移", "btn_down", layout)
         self.btn_delete = self.setup_signal_button("×", "删除", "btn_delete", layout)
+        self.btn_refuse = self.setup_signal_button("!", "拒收", "btn_refuse", layout)
 
         self.btn_delete.clicked.connect(lambda: self.text_deleted.emit(self))
         self.btn_down.clicked.connect(lambda: self.text_down.emit(self))
         self.btn_up.clicked.connect(lambda: self.text_up.emit(self))
+        self.btn_refuse.clicked.connect(self.toggle_refuse)
 
     def setup_signal_button(self, icon, text, btn_name, parent_layout):
         """ 创建图标+文字的组合按钮 """
@@ -163,6 +167,21 @@ class MessageWidget(QWidget):
             else:
                 container_layout.addWidget(self.triangle_label, alignment=Qt.AlignLeft | Qt.AlignTop)
                 container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignLeft)
+
+        self.refuse_icon = QLabel()
+        self.refuse_icon.setObjectName("refuse")
+        refuse_pic = QPixmap(self.config.get_refuse_icon())
+        refuse_pic = refuse_pic.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        self.refuse_icon.setPixmap(refuse_pic)
+        if self.is_me:
+            container_layout.insertWidget(0, self.refuse_icon)
+        else:
+            container_layout.addWidget(self.refuse_icon)
+        self.refuse_icon.setVisible(False)
+
+    def toggle_refuse(self):
+        self.refuse = not self.refuse
+        self.refuse_icon.setVisible(self.refuse)
 
     def enterEvent(self, event):
         """ 鼠标进入显示控制按钮 """

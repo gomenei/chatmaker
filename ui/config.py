@@ -101,6 +101,8 @@ class ConfigManager(QObject):
                 "transfer_receive_other": "./fig/pocket/transfer_receive_other.png",
             }
 
+            self.refuse_icon_path = "./fig/icon/refuse.png"
+
     @classmethod
     def instance(cls):
         if cls._instance is None:
@@ -132,3 +134,6 @@ class ConfigManager(QObject):
         if path and not QFile.exists(path):
             print(f"Warning: Pocket image not found: {path}")
         return path
+
+    def get_refuse_icon(self) -> str:
+        return self.refuse_icon_path
