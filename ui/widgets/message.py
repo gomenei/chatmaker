@@ -6,6 +6,7 @@ from ..config import ConfigManager
 from ui.widgets.avatar import AvatarWidget
 from ui.widgets.bubble import BubbleWidget
 from ui.widgets.voicebubble import VoiceBubbleWidget
+from ui.widgets.pocket import Pocket
 
 
 class MessageWidget(QWidget):
@@ -123,38 +124,51 @@ class MessageWidget(QWidget):
         self.bubble_container = QWidget()
         self.bubble_container.setObjectName("bubble_container_me" if self.is_me else "bubble_container_other")
 
-        # 气泡主体
-        if self.message_type == "voice":
-            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage.png", is_me=self.is_me, mode=self.message_type)
-        elif self.message_type == "voicecall":
-            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicecall.png", is_me=self.is_me, mode=self.message_type)
-        elif self.message_type == "videocall":
-            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/videocall.png", is_me=self.is_me, mode=self.message_type)
-        elif self.message_type == "photo":
-            self.bubble = BubbleWidget("", self)
-            self.bubble.insert_image(text)
-        elif self.message_type == "gif":
-            self.bubble = BubbleWidget("", self)
-            self.bubble.insert_gif(text)
+        if self.text == "pocket":
+            self.bubble = Pocket(self.is_me, self.message_type)
+            self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
+
+            # 容器布局设置
+            container_layout = QHBoxLayout(self.bubble_container)
+            container_layout.setContentsMargins(0, 0, 0, 0)
+            container_layout.setSpacing(0)
+            if self.is_me:
+                container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignRight)
+            else:
+                container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignLeft)
         else:
-            self.bubble = BubbleWidget(text, self)
+            # 气泡主体
+            if self.message_type == "voice":
+                self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage.png", is_me=self.is_me, mode=self.message_type)
+            elif self.message_type == "voicecall":
+                self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicecall.png", is_me=self.is_me, mode=self.message_type)
+            elif self.message_type == "videocall":
+                self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/videocall.png", is_me=self.is_me, mode=self.message_type)
+            elif self.message_type == "photo":
+                self.bubble = BubbleWidget("", self)
+                self.bubble.insert_image(text)
+            elif self.message_type == "gif":
+                self.bubble = BubbleWidget("", self)
+                self.bubble.insert_gif(text)
+            else:
+                self.bubble = BubbleWidget(text, self)
 
-        self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
+            self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
 
-        self.triangle_label = QLabel(self.bubble_container)
-        self.triangle_label.setObjectName("triangle_me" if self.is_me else "triangle_other")
-        self.triangle_label.setFixedSize(12, 20)
+            self.triangle_label = QLabel(self.bubble_container)
+            self.triangle_label.setObjectName("triangle_me" if self.is_me else "triangle_other")
+            self.triangle_label.setFixedSize(12, 20)
 
-        # 容器布局设置
-        container_layout = QHBoxLayout(self.bubble_container)
-        container_layout.setContentsMargins(0, 0, 0, 0)
-        container_layout.setSpacing(0)
-        if self.is_me:
-            container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignRight)
-            container_layout.addWidget(self.triangle_label, alignment=Qt.AlignRight | Qt.AlignTop)
-        else:
-            container_layout.addWidget(self.triangle_label, alignment=Qt.AlignLeft | Qt.AlignTop)
-            container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignLeft)
+            # 容器布局设置
+            container_layout = QHBoxLayout(self.bubble_container)
+            container_layout.setContentsMargins(0, 0, 0, 0)
+            container_layout.setSpacing(0)
+            if self.is_me:
+                container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignRight)
+                container_layout.addWidget(self.triangle_label, alignment=Qt.AlignRight | Qt.AlignTop)
+            else:
+                container_layout.addWidget(self.triangle_label, alignment=Qt.AlignLeft | Qt.AlignTop)
+                container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignLeft)
 
     def enterEvent(self, event):
         """ 鼠标进入显示控制按钮 """
