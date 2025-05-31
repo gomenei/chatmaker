@@ -31,6 +31,10 @@ class ConfigManager(QObject):
                 "发送红包": "./fig/icon/red_pocket_send.png",
                 "收到红包": "./fig/icon/red_pocket_receive.png",
                 "插入时间": "./fig/icon/time.png",
+                "拍一拍": "./fig/icon/tickle.png",
+                "领取红包": "./fig/icon/red_pocket.png",
+                "转账过期": "./fig/icon/transfer__.png",
+                "撤回消息": "./fig/icon/revoke.png",
             }
             self.emoji_map = {
                 f"{i}": f"./fig/emojis/{i}.gif" for i in range(1, 109)
@@ -97,6 +101,8 @@ class ConfigManager(QObject):
                 "transfer_receive_other": "./fig/pocket/transfer_receive_other.png",
             }
 
+            self.refuse_icon_path = "./fig/icon/refuse.png"
+
     @classmethod
     def instance(cls):
         if cls._instance is None:
@@ -128,3 +134,6 @@ class ConfigManager(QObject):
         if path and not QFile.exists(path):
             print(f"Warning: Pocket image not found: {path}")
         return path
+
+    def get_refuse_icon(self) -> str:
+        return self.refuse_icon_path
