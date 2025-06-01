@@ -99,46 +99,44 @@ class BubbleWidget(QTextEdit):
         QTimer.singleShot(0, lambda: self.update_size())  # 延迟确保布局完成
         #QTimer.singleShot(30, lambda: self.update_size())  # 二次刷新解决图片加载延迟
 
+    def get_emoji_html(self, emoji_code):
+        font_metrics = QFontMetrics(self.font())
+        emoji_size = font_metrics.lineSpacing()
+        # print("emoji width", emoji_size)
+        """返回表情图片的HTML格式"""
+        if emoji_code in self.emoji_map:
+            return f'''<img src="{self.emoji_map[emoji_code]}" 
+                        width="{emoji_size}" 
+                        height="{emoji_size}"
+                        style="display: block;
+                vertical-align: top;  /* 关键：强制顶部对齐 */
+                margin: 0;
+                padding: 0;
+                line-height: {emoji_size}px"
+         '''
+        return ""
+
     def insert_emoji(self, emoji_code):
-        """使用QTextImageFormat插入表情"""
-        if emoji_code not in self.emoji_map:
-            return
-
+        """用HTML插入表情图片（替代QTextImageFormat方式）"""
         cursor = self.textCursor()
-        image_format = QTextImageFormat()
-        image_format.setName(self.emoji_map[emoji_code])
-        image_format.setWidth(20)
-        image_format.setHeight(20)
+        html = self.get_emoji_html(emoji_code)
+        if html:  # 只插入有效的表情
+            cursor.insertHtml(html)
 
-        # 插入图片并确保光标位置更新
-        cursor.insertImage(image_format)
-        self.setTextCursor(cursor)
+    # def insert_emoji(self, emoji_code):
+    #     """使用QTextImageFormat插入表情"""
+    #     if emoji_code not in self.emoji_map:
+    #         return
 
-        self.document().markContentsDirty(0, self.document().characterCount())
-        self.update_size()
+    #     cursor = self.textCursor()
+    #     image_format = QTextImageFormat()
+    #     image_format.setName(self.emoji_map[emoji_code])
+    #     image_format.setWidth(20)
+    #     image_format.setHeight(20)
 
-    def insert_image(self, file_path):
-        cursor = self.textCursor()
-        image_format = QTextImageFormat()
-        image_format.setName(file_path)
-        cursor.insertImage(image_format)
-        self.update_size()
+    #     # 插入图片并确保光标位置更新
+    #     cursor.insertImage(image_format)
+    #     self.setTextCursor(cursor)
 
-    def insert_gif(self, file_path):
-        # 创建动画Label
-        gif_label = QLabel(self)
-        movie = QMovie(file_path)
-        movie.setScaledSize(movie.currentImage().size().scaled(100, 100, Qt.KeepAspectRatio))
-        gif_label.setMovie(movie)
-        movie.start()
-
-        # 在文本框中插入占位符
-        cursor = self.textCursor()
-        cursor.insertText(" ")  # 插入空格占位
-        self.update()
-
-        # 定位Label到占位符位置
-        rect = self.cursorRect(cursor)
-        gif_label.move(rect.x() - 5, rect.y() - 5)  # 微调位置
-        gif_label.show()
-
+    #     self.document().markContentsDirty(0, self.document().characterCount())
+    #     self.update_size()

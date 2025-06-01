@@ -19,14 +19,14 @@ class StatusWidget(QWidget):
         self.pattern = "huawei"
 
         self.status_layout = QHBoxLayout(self)
-        self.status_layout.setContentsMargins(90, 0, 12, 0)
+        self.status_layout.setContentsMargins(10, 0, 12, 0)
 
         # 左侧
-        self.time = "0:00"
+        self.time = "10:00"
         self.status_left = QLabel(self.time)
         font = QFont("HarmonyOS Sans SC")
         self.status_left.setFont(font)
-        self.status_layout.addWidget(self.status_left)
+        self.status_layout.addWidget(self.status_left, alignment=Qt.AlignLeft)
 
         # 中间 → 替换为 QLabel 使其可以填充背景
         status_middle = QLabel("")
@@ -305,7 +305,7 @@ class StatusWidget(QWidget):
 
     def huawei_pattern(self):
         self.monitor_time_input()
-        self.status_layout.setContentsMargins(90, 0, 12, 0)
+        # self.status_layout.setContentsMargins(90, 0, 12, 0)
 
         # 左侧时间
         font = QFont("HarmonyOS Sans SC")
@@ -465,7 +465,7 @@ class StatusWidget(QWidget):
 
     def apple_pattern(self):
         self.monitor_time_input()
-        self.status_layout.setContentsMargins(90, 0, 12, 0)
+        # self.status_layout.setContentsMargins(90, 0, 12, 0)
 
         # 左侧时间
         font = QFont("Inter SemiBold")

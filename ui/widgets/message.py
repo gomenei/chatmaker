@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame, QSizePolicy,
-                             QPushButton, QLabel, QFileDialog, QLineEdit, QTextEdit)
+                             QPushButton, QLabel, QFileDialog, QLineEdit, QTextEdit, QSpacerItem)
 from PyQt5.QtCore import Qt, pyqtSignal, QEvent, QTime
 from PyQt5.QtGui import QTextImageFormat, QPixmap, QTextOption
 from ..config import ConfigManager
@@ -7,6 +7,7 @@ from ui.widgets.avatar import AvatarWidget
 from ui.widgets.bubble import BubbleWidget
 from ui.widgets.voicebubble import VoiceBubbleWidget
 from ui.widgets.pocket import Pocket
+from ui.widgets.photo_gif import ImageAndGifWidget
 
 
 class MessageWidget(QWidget):
@@ -88,12 +89,14 @@ class MessageWidget(QWidget):
         self.btn_up = self.setup_signal_button("↑", "上移", "btn_up", layout)
         self.btn_down = self.setup_signal_button("↓", "下移", "btn_down", layout)
         self.btn_delete = self.setup_signal_button("×", "删除", "btn_delete", layout)
-        self.btn_refuse = self.setup_signal_button("!", "拒收", "btn_refuse", layout)
+        if self.message_type != "system" and self.is_me:
+            self.btn_refuse = self.setup_signal_button("!", "拒收", "btn_refuse", layout)
 
         self.btn_delete.clicked.connect(lambda: self.text_deleted.emit(self))
         self.btn_down.clicked.connect(lambda: self.text_down.emit(self))
         self.btn_up.clicked.connect(lambda: self.text_up.emit(self))
-        self.btn_refuse.clicked.connect(self.toggle_refuse)
+        if self.message_type != "system" and self.is_me:
+            self.btn_refuse.clicked.connect(self.toggle_refuse)
 
     def setup_signal_button(self, icon, text, btn_name, parent_layout):
         """ 创建图标+文字的组合按钮 """
@@ -127,62 +130,58 @@ class MessageWidget(QWidget):
         # 创建容器
         self.bubble_container = QWidget()
         self.bubble_container.setObjectName("bubble_container_me" if self.is_me else "bubble_container_other")
-
+        is_bubble = False
         if self.text == "pocket":
             self.bubble = Pocket(self.is_me, self.message_type)
             self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
-
-            # 容器布局设置
-            container_layout = QHBoxLayout(self.bubble_container)
-            container_layout.setContentsMargins(0, 0, 0, 0)
-            container_layout.setSpacing(0)
-            if self.is_me:
-                container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignRight)
-            else:
-                container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignLeft)
+        # 气泡主体
+        elif self.message_type == "voice":
+            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage.png", is_me=self.is_me, mode=self.message_type)
+            is_bubble = True
+        elif self.message_type == "voicecall":
+            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicecall.png", is_me=self.is_me, mode=self.message_type)
+            is_bubble = True
+        elif self.message_type == "videocall":
+            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/videocall.png", is_me=self.is_me, mode=self.message_type)
+            is_bubble = True
+        elif self.message_type == "photo":
+            self.bubble = ImageAndGifWidget()
+            self.bubble.set_image(text)
+        elif self.message_type == "gif":
+            self.bubble = ImageAndGifWidget()
+            self.bubble.set_gif(text)
         else:
-            # 气泡主体
-            if self.message_type == "voice":
-                self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage.png", is_me=self.is_me, mode=self.message_type)
-            elif self.message_type == "voicecall":
-                self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicecall.png", is_me=self.is_me, mode=self.message_type)
-            elif self.message_type == "videocall":
-                self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/videocall.png", is_me=self.is_me, mode=self.message_type)
-            elif self.message_type == "photo":
-                self.bubble = BubbleWidget("", self)
-                self.bubble.insert_image(text)
-            elif self.message_type == "gif":
-                self.bubble = BubbleWidget("", self)
-                self.bubble.insert_gif(text)
-            else:
-                self.bubble = BubbleWidget(text, self)
+            self.bubble = BubbleWidget(text, self)
+            is_bubble = True
 
-            self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
-
-            self.triangle_label = QLabel(self.bubble_container)
-            self.triangle_label.setObjectName("triangle_me" if self.is_me else "triangle_other")
-            self.triangle_label.setFixedSize(12, 20)
-
-            # 容器布局设置
-            container_layout = QHBoxLayout(self.bubble_container)
-            container_layout.setContentsMargins(0, 0, 0, 0)
-            container_layout.setSpacing(0)
-            if self.is_me:
-                container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignRight)
-                container_layout.addWidget(self.triangle_label, alignment=Qt.AlignRight | Qt.AlignTop)
-            else:
-                container_layout.addWidget(self.triangle_label, alignment=Qt.AlignLeft | Qt.AlignTop)
-                container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignLeft)
-
+        self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
         self.refuse_icon = QLabel()
         self.refuse_icon.setObjectName("refuse")
         refuse_pic = QPixmap(self.config.get_refuse_icon())
-        refuse_pic = refuse_pic.scaled(20, 20, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        refuse_pic = refuse_pic.scaled(35, 35, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         self.refuse_icon.setPixmap(refuse_pic)
+
+        self.triangle_label = QLabel()
+        self.triangle_label.setObjectName("triangle_me" if self.is_me else "triangle_other")
+        self.triangle_label.setFixedSize(12, 20)
+
+        # 容器布局设置
+        container_layout = QHBoxLayout(self.bubble_container)
+        container_layout.setContentsMargins(0, 0, 0, 0)
+        container_layout.setSpacing(0)
         if self.is_me:
-            container_layout.insertWidget(0, self.refuse_icon)
+            container_layout.addWidget(self.refuse_icon, alignment=Qt.AlignRight)
+            container_layout.addWidget(self.bubble, alignment=Qt.AlignRight)
+            
+            if is_bubble:
+                self.triangle_label.setStyleSheet("margin-left: -2px;")
+                container_layout.addWidget(self.triangle_label, alignment=Qt.AlignTop)
         else:
-            container_layout.addWidget(self.refuse_icon)
+            if is_bubble:
+                self.triangle_label.setStyleSheet("margin-right: -1px;")
+                container_layout.addWidget(self.triangle_label, alignment=Qt.AlignTop)
+            container_layout.addWidget(self.bubble, stretch=1, alignment=Qt.AlignLeft)
+
         self.refuse_icon.setVisible(False)
 
     def toggle_refuse(self):
@@ -232,6 +231,7 @@ class SystemMessageWidget(MessageWidget):
         elif self.mode == "transfer":
             return "收款方24小时内未接收你的<span style=\"color:dodgerblue;\">转账</span>，已过期"
         return ""
+    
     def setup_bubble(self, default_text: str):
         layout = self.bubble_container.layout()
         if layout is None:

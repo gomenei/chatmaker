@@ -53,7 +53,7 @@ class InputArea(QWidget):
         self.others_btn.setFixedSize(icon_width, icon_height)
 
         self.input_box = TextInput(self)
-        self.input_box.setStyleSheet("border: 1px solid red;")
+        self.input_box.setStyleSheet("border: none;")
 
         self.send_btn = QPushButton("发送")
         btn_width = int(width * (3 / 20))

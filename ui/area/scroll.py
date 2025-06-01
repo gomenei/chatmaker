@@ -16,6 +16,10 @@ class ScrollArea(QScrollArea):
         self.setWidgetResizable(True)
         self.setFrameShape(QFrame.NoFrame)
         self.setFixedWidth(self.parent().width())
+
+        # 禁用水平和垂直滚动条
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         
         self.message_container = QWidget()
         self.message_layout = QVBoxLayout(self.message_container)
@@ -51,10 +55,12 @@ class ScrollArea(QScrollArea):
         message_widget.text_down.connect(self.move_message_down)
         self.scroll_to_bottom()  # 滚动到底部
         QTimer.singleShot(50, self.scroll_to_bottom)
+
     def add_system_message(self, is_me, mode="time"):
         system_message_widget = SystemMessageWidget(
             is_me = is_me, 
-            mode = mode
+            mode = mode,
+            parent = self
         )
         container = QWidget()
         layout = QHBoxLayout(container)

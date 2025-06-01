@@ -19,28 +19,29 @@ class Pocket(QWidget):
         self.pixmap = QPixmap(pocket_path)
         self.setFixedSize(self.pixmap.size())
         self.main_text = "恭喜发财，大吉大利" if "red_pocket" in self.pocket_type else "0.00"
+        scale = 1
         if self.pocket_type == "red_pocket_send":
             self.status_text = ""
-            self.main_rect = QRect(65, 25, 150, 20)
+            self.main_rect = QRect(int(65 * scale), int(25 * scale), int(150 * scale), int(20 * scale))
             self.status_rect = QRect(0, 0, 0, 0)
         elif self.pocket_type == "red_pocket_receive":
             if self.is_me:
                 self.status_text = "已被领完"
             else:
                 self.status_text = "已领取"
-            self.main_rect = QRect(65, 18, 150, 20)
-            self.status_rect = QRect(65, 40, 120, 20)
+            self.main_rect = QRect(int(65 * scale), int(18 * scale), int(150 * scale), int(20 * scale))
+            self.status_rect = QRect(int(65 * scale), int(40 * scale), int(120 * scale), int(20 * scale))
         elif self.pocket_type == "transfer_send":
             if self.is_me:
                 self.status_text = "你发起了一笔转账"
             else:
                 self.status_text = "请收款"
-            self.main_rect = QRect(66, 15, 150, 20)
-            self.status_rect = QRect(57, 35, 120, 20)
+            self.main_rect = QRect(int(66 * scale), int(15 * scale), int(150 * scale), int(20 * scale))
+            self.status_rect = QRect(int(57 * scale), int(35 * scale), int(120 * scale), int(20 * scale))
         elif self.pocket_type == "transfer_receive":
             self.status_text = "已收款"
-            self.main_rect = QRect(66, 15, 150, 20)
-            self.status_rect = QRect(57, 35, 120, 20)
+            self.main_rect = QRect(int(66 * scale), int(15 * scale), int(150 * scale), int(20 * scale))
+            self.status_rect = QRect(int(57 * scale), int(35 * scale), int(120 * scale), int(20 * scale))
 
         self.main_line_edit = QLineEdit(self)
         self.main_line_edit.setGeometry(self.main_rect)
@@ -56,7 +57,7 @@ class Pocket(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.drawPixmap(0, 0, self.pixmap.width(), self.pixmap.height(), self.pixmap)
-        painter.setFont(QFont("HarmonyOS Sans SC Medium", 9))
+        painter.setFont(QFont("HarmonyOS Sans SC Medium", 8))
         painter.setPen(Qt.white)
         painter.drawText(self.main_rect, Qt.AlignLeft, self.main_text)
         painter.setFont(QFont("黑体", 7))
