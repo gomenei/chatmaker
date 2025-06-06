@@ -4,8 +4,7 @@ from PyQt5.QtCore import Qt, pyqtSignal, QEvent, QTime, QTimer
 from PyQt5.QtGui import QPixmap, QTextOption, QTextCursor
 from ..config import ConfigManager
 from ui.widgets.avatar import AvatarWidget
-from ui.widgets.bubble import BubbleWidget
-from ui.widgets.voicebubble import VoiceBubbleWidget
+from ui.widgets.bubble import BubbleWidget, VoiceBubbleWidget
 from ui.widgets.pocket import Pocket
 from ui.widgets.photo_gif import ImageAndGifWidget
 
@@ -136,7 +135,7 @@ class MessageWidget(QWidget):
             self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
         # 气泡主体
         elif self.message_type == "voice":
-            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage.png", is_me=self.is_me, mode=self.message_type)
+            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage_other.png", is_me=self.is_me, mode=self.message_type)
             is_bubble = True
         elif self.message_type == "voicecall":
             self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicecall.png", is_me=self.is_me, mode=self.message_type)
