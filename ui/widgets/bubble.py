@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QSizePolicy, QTextBrowser, QTextEdit
 from PyQt5.QtGui import QTextDocument, QFontMetrics, QTextImageFormat, QTextCursor, QTextOption
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QSizeF
-from sympy.printing.pretty.pretty_symbology import line_width
+# from sympy.printing.pretty.pretty_symbology import line_width
 from ui.config import ConfigManager
 import os
 
@@ -28,24 +28,16 @@ class BubbleWidget(QTextEdit):
         self.setContentsMargins(0, 0, 0, 0)
         self.document().setDocumentMargin(0)
 
-        self.setMaximumWidth(300)
-        self.max_width = 300  # 最大宽度
+        self.setMaximumWidth(600)
+        self.max_width = 600  # 最大宽度
         # 设置初始文字
         self.setText(self.text)
         self.setReadOnly(True)
 
         self.document().setDocumentMargin(6)
-
-        self.setLineWrapMode(QTextEdit.WidgetWidth)
-        self.setWordWrapMode(QTextOption.WrapAtWordBoundaryOrAnywhere)
-
-        self.document().setDocumentMargin(6)
-        self.setLineWrapMode(QTextEdit.WidgetWidth)
-        self.setWordWrapMode(QTextOption.WrapAtWordBoundaryOrAnywhere)
+        # self.setLineWrapMode(QTextEdit.WidgetWidth)
+        # self.setWordWrapMode(QTextOption.WrapAtWordBoundaryOrAnywhere)
         self.document().setUseDesignMetrics(True)  # 添加精确度量
-
-        self.setLineWrapMode(QTextEdit.WidgetWidth)
-        self.setWordWrapMode(QTextOption.WrapAtWordBoundaryOrAnywhere)
 
         # 统一设置文档边距（与QSS的padding匹配）
         self.document().setDocumentMargin(8)  # 对应QSS中的padding:8px
