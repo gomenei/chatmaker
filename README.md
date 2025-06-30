@@ -1,6 +1,9 @@
 # ChatMaker
 ## PKU程序设计组队大作业
 
+### 演示视频链接
+https://disk.pku.edu.cn/link/AR35FB689C816141BDAE75A6198086B5D4
+
 ## 项目结构
 ```text
 CHATMAKER/
