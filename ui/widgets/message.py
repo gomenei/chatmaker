@@ -1,11 +1,10 @@
 from PyQt5.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout, QFrame, QSizePolicy,
-                             QPushButton, QLabel, QFileDialog, QLineEdit, QTextEdit, QSpacerItem)
-from PyQt5.QtCore import Qt, pyqtSignal, QEvent, QTime
-from PyQt5.QtGui import QTextImageFormat, QPixmap, QTextOption
+                             QPushButton, QLabel, QTextEdit)
+from PyQt5.QtCore import Qt, pyqtSignal, QEvent, QTime, QTimer
+from PyQt5.QtGui import QPixmap, QTextOption, QTextCursor
 from ..config import ConfigManager
 from ui.widgets.avatar import AvatarWidget
-from ui.widgets.bubble import BubbleWidget
-from ui.widgets.voicebubble import VoiceBubbleWidget
+from ui.widgets.bubble import BubbleWidget, VoiceBubbleWidget
 from ui.widgets.pocket import Pocket
 from ui.widgets.photo_gif import ImageAndGifWidget
 
@@ -22,7 +21,7 @@ class MessageWidget(QWidget):
         self.is_me = is_me  # 消息方向标识
         self.role = role  # 群成员标识
         self.avatar_path = avatar_path
-        self.text = text
+        self.text_content = text
         self.message_type = message_type
         self.config = ConfigManager().instance()
         self.refuse = False
@@ -33,7 +32,7 @@ class MessageWidget(QWidget):
         """初始化界面布局"""
         self.parent_width = self.parent().width()
         self.setup_avatar()
-        self.setup_bubble(self.text)
+        self.setup_bubble(self.text_content)
         self.setup_button()
 
         """主布局设置"""
@@ -131,12 +130,12 @@ class MessageWidget(QWidget):
         self.bubble_container = QWidget()
         self.bubble_container.setObjectName("bubble_container_me" if self.is_me else "bubble_container_other")
         is_bubble = False
-        if self.text == "pocket":
+        if self.text_content == "pocket":
             self.bubble = Pocket(self.is_me, self.message_type)
             self.bubble.setObjectName("bubble_me" if self.is_me else "bubble_other")
         # 气泡主体
         elif self.message_type == "voice":
-            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage.png", is_me=self.is_me, mode=self.message_type)
+            self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicemessage_other.png", is_me=self.is_me, mode=self.message_type)
             is_bubble = True
         elif self.message_type == "voicecall":
             self.bubble = VoiceBubbleWidget(duration=0, icon_path="fig/icon/voicecall.png", is_me=self.is_me, mode=self.message_type)
@@ -221,6 +220,8 @@ class SystemMessageWidget(MessageWidget):
         if self.mode == "time":
             return QTime.currentTime().toString("HH:mm")
         elif self.mode == "tickle":
+            sender = "我" if self.is_me else self.target_name
+            receiver = self.target_name if self.is_me else "我"
             return f"{sender}拍了拍{receiver}"
         elif self.mode == "red envelope":
             icon_path = "fig/icon/red_envelope.svg"
@@ -264,25 +265,62 @@ class SystemMessageWidget(MessageWidget):
             self.edit.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
             content_layout.addWidget(self.edit, 0, Qt.AlignVCenter)
         else:
-            self.edit = QTextEdit()
-            self.edit.setHtml(default_text)
+            self.edit = SystemBubbleWidget(text=default_text)
             self.edit.setStyleSheet(
                 "border: none; background: transparent; font-size: 15px; color: gray;" \
                 "padding: 0px; margin: 0px;"
             )
-            self.edit.setWordWrapMode(QTextOption.NoWrap)
             self.edit.setAlignment(Qt.AlignCenter)
-            self.edit.setFixedHeight(24) 
-            self.edit.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-            self.edit.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-            self.edit.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
             content_layout.addWidget(self.edit)
         content_widget = QWidget()
         content_widget.setLayout(content_layout)
-
         layout.addStretch()
         layout.addWidget(content_widget)
         layout.addStretch()
 
     def text(self):
-        return self.edit.toHtml() if self.edit else ""
+        if isinstance(self.edit, QTextEdit):
+            return self.edit.toPlainText()
+        elif isinstance(self.edit, QLabel):
+            return self.edit.text()
+        return ""
+    
+class SystemBubbleWidget(QTextEdit):
+    text_edited = pyqtSignal(str)
+    def __init__(self, text: str, parent=None):
+        super().__init__(parent)
+        self.setHtml(text)
+        self.setReadOnly(True)
+        self.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
+        self.setWordWrapMode(QTextOption.WrapAtWordBoundaryOrAnywhere)
+        self.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.setFixedHeight(24)
+        self._last_text = text
+
+        # 事件覆盖
+        self.mouseDoubleClickEvent = self.enter_edit_mode
+        self.focusOutEvent = self.exit_edit_mode
+        self.keyPressEvent = self.editor_key_press_event
+
+    def enter_edit_mode(self, event):
+        self.setReadOnly(False)
+        self.setStyleSheet("background:white; border:1px solid gray; color:black; font-size:15px;")
+        cursor = self.textCursor()
+        cursor.movePosition(QTextCursor.End)
+        self.setTextCursor(cursor)
+        self.setFocus()
+
+    def exit_edit_mode(self, event):
+        self.setReadOnly(True)
+        self.setStyleSheet("background:transparent; border:none; color:gray; font-size:15px;")
+        new_text = self.toPlainText()
+        if new_text != self._last_text:
+            self._last_text = new_text
+            self.text_edited.emit(new_text)
+
+    def editor_key_press_event(self, event):
+        if event.key() in (Qt.Key_Return, Qt.Key_Enter) and not (event.modifiers() & Qt.ShiftModifier):
+            self.clearFocus()
+        else:
+            QTextEdit.keyPressEvent(self, event)

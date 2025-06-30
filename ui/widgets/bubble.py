@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QSizePolicy, QTextBrowser, QTextEdit, QLabel
-from PyQt5.QtGui import QTextDocument, QFontMetrics, QTextImageFormat, QTextCursor, QTextOption, QMovie
+from PyQt5.QtWidgets import QSizePolicy, QTextBrowser, QTextEdit
+from PyQt5.QtGui import QTextDocument, QFontMetrics, QTextImageFormat, QTextCursor, QTextOption
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QSizeF
 from sympy.printing.pretty.pretty_symbology import line_width
 from ui.config import ConfigManager
+import os
 
 class BubbleWidget(QTextEdit):
     def __init__(self, text: str, parent=None):
@@ -132,3 +133,41 @@ class BubbleWidget(QTextEdit):
 
     #     self.document().markContentsDirty(0, self.document().characterCount())
     #     self.update_size()
+
+class VoiceBubbleWidget(BubbleWidget):
+    def __init__(self, duration=0, icon_path="fig/icon/voicemessage_other.png", is_me=True, parent=None, mode="voice"): 
+        self.duration = duration
+        self.mode = mode
+        self.is_me = is_me
+        self.icon_path = icon_path
+        
+        html = self.generate_html()
+        super().__init__(html, parent=parent)
+
+        self.setReadOnly(True)
+        color = "#9EEA6A" if is_me else "#FFFFFF"
+        self.setStyleSheet(f"""
+            background: {color};
+            border-radius: 10px;
+            border: none;
+        """)
+        self.setContentsMargins(12, 8, 12, 8)
+        self.document().setDocumentMargin(8)
+    def generate_html(self):
+        span_style = "font-size:16px; font-family:'微软雅黑',Arial,sans-serif; line-height:18px;"
+        abs_path = os.path.abspath(self.icon_path)
+        if self.mode == "voice":
+            abs_path = os.path.abspath("fig/icon/voicemessage_me.png" if self.is_me else "fig/icon/voicemessage_other.png")
+            if self.is_me:
+                return f'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{self.duration}″ <img src="{abs_path}" width="20" height="20" style="vertical-align:middle;">'
+            else:
+                return f'<img src="{abs_path}" width="20" height="20" style="vertical-align:middle;"> {self.duration}″&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+        elif self.mode in ("voicecall", "videocall"):
+            span_style = "font-size:16px; font-family:'微软雅黑',Arial,sans-serif; line-height:18px;"
+            icon_img = f'<img src="{abs_path}" width="24" height="24" style="vertical-align:middle;">'
+            if not self.is_me:
+                return f'{icon_img} <span style="{span_style}">通话时长 00:00/已取消/对方无应答/对方已拒绝</span>'
+            else:
+                return f'<span style="{span_style}">通话时长 00:00/已取消/对方无应答/对方已拒绝</span> {icon_img}'
+        else:
+            return "<span style='color:#888;'>[不支持的消息类型]</span>"
