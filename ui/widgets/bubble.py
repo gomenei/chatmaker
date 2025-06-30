@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QSizePolicy, QTextBrowser, QTextEdit
 from PyQt5.QtGui import QTextDocument, QFontMetrics, QTextImageFormat, QTextCursor, QTextOption
 from PyQt5.QtCore import Qt, QTimer, pyqtSignal, QSizeF
-from sympy.printing.pretty.pretty_symbology import line_width
+# from sympy.printing.pretty.pretty_symbology import line_width
 from ui.config import ConfigManager
 import os
 
