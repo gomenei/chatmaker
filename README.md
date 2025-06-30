@@ -4,7 +4,7 @@
 快速生成高度自定义的微信聊天截图，满足娱乐创作等场景需求。
 
 <div>
-    <a href="https://disk.pku.edu.cn/link/AR35FB689C816141BDAE75A6198086B5D4"><strong>▶️ 演示视频</strong></a>
+    <a href="https://disk.pku.edu.cn/link/AA53860C4CD5444B1D839125E6EB0AAD78"><strong>▶️ 演示视频</strong></a>
 </div>
 
 ## 🚀 项目概述
